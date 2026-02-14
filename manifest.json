@@ -1,0 +1,23 @@
+{
+  "name": "Diego 2026 - Sistema de Vida",
+  "short_name": "Diego 2026",
+  "description": "Sistema completo de produtividade, metas e rotinas",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#667eea",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Crect width='128' height='128' fill='%23667eea'/%3E%3Ctext x='64' y='80' fill='white' font-size='60' text-anchor='middle' font-weight='bold'%3E⚡%3C/text%3E%3C/svg%3E",
+      "sizes": "128x128",
+      "type": "image/svg+xml"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' fill='%23667eea'/%3E%3Ctext x='256' y='340' fill='white' font-size='280' text-anchor='middle' font-weight='bold'%3E⚡%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Diego 2026">
+    <meta name="theme-color" content="#667eea">
+    <link rel="manifest" href="./manifest.json">
+    <title>Diego 2026 - App Premium</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --primary: #667eea;
+            --primary-dark: #5568d3;
+            --secondary: #764ba2;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --light: #f8f9fa;
+            --dark: #343a40;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .app-container {
+            max-width: 100%;
+            min-height: 100vh;
+            background: white;
+            position: relative;
+        }
+        
+        .safe-area-top {
+            padding-top: env(safe-area-inset-top);
+            background: var(--primary);
+        }
+        
+        .safe-area-bottom {
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        .app-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .app-header h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+        
+        .app-header .date {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+        
+        .notification-banner {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .notification-banner.show {
+            display: flex;
+        }
+        
+        .notification-banner button {
+            background: white;
+            color: var(--primary);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .progress-ring {
+            width: 150px;
+            height: 150px;
+            margin: 20px auto;
+            position: relative;
+        }
+        
+        .progress-ring svg {
+            transform: rotate(-90deg);
+        }
+        
+        .progress-ring-circle {
+            fill: none;
+            stroke: var(--light);
+            stroke-width: 12;
+        }
+        
+        .progress-ring-progress {
+            fill: none;
+            stroke: var(--success);
+            stroke-width: 12;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+        
+        .progress-ring-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary);
+        }
+        
+        .content {
+            padding: 20px;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 1.3em;
+            color: var(--primary);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .task-item {
+            background: var(--light);
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .task-item:active {
+            transform: scale(0.98);
+        }
+        
+        .task-item.completed {
+            background: #d4edda;
+            opacity: 0.7;
+        }
+        
+        .task-item.completed .task-text {
+            text-decoration: line-through;
+        }
+        
+        .task-checkbox {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 3px solid var(--primary);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+            transition: all 0.3s ease;
+        }
+        
+        .task-item.completed .task-checkbox {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        
+        .task-checkbox::after {
+            content: '✓';
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .task-item.completed .task-checkbox::after {
+            opacity: 1;
+        }
+        
+        .task-emoji {
+            font-size: 1.5em;
+            flex-shrink: 0;
+        }
+        
+        .task-content {
+            flex: 1;
+        }
+        
+        .task-text {
+            font-size: 1em;
+            color: var(--dark);
+            margin-bottom: 3px;
+        }
+        
+        .task-time {
+            font-size: 0.85em;
+            color: #666;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.85em;
+            opacity: 0.9;
+        }
+        
+        .week-days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-top: 15px;
+        }
+        
+        .day-badge {
+            aspect-ratio: 1;
+            background: var(--light);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .day-badge:active {
+            transform: scale(0.95);
+        }
+        
+        .day-badge.completed {
+            background: linear-gradient(135deg, var(--success), #20c997);
+            color: white;
+        }
+        
+        .day-badge.today {
+            border: 2px solid var(--primary);
+        }
+        
+        .day-name {
+            font-size: 0.7em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .day-icon {
+            font-size: 1.3em;
+        }
+        
+        .timer-container {
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .timer-display {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--primary);
+            margin: 20px 0;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .timer-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            touch-action: manipulation;
+        }
+        
+        .btn:active {
+            transform: scale(0.95);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-success {
+            background: var(--success);
+        }
+        
+        .btn-outline {
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+        
+        .notes-area {
+            width: 100%;
+            min-height: 100px;
+            padding: 15px;
+            border: 2px solid var(--light);
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: inherit;
+            resize: vertical;
+            margin-top: 10px;
+        }
+        
+        .goals-section {
+            margin-top: 20px;
+        }
+        
+        .goal-item {
+            background: var(--light);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+        }
+        
+        .goal-title {
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 10px;
+        }
+        
+        .goal-progress-bar {
+            height: 30px;
+            background: #e9ecef;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .goal-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success), #20c997);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .goal-values {
+            margin-top: 5px;
+            font-size: 0.9em;
+            color: #666;
+            text-align: center;
+        }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+        
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: #666;
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+        }
+        
+        .nav-item:active {
+            transform: scale(0.95);
+        }
+        
+        .nav-icon {
+            font-size: 1.5em;
+            margin-bottom: 3px;
+        }
+        
+        .nav-label {
+            font-size: 0.7em;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--dark);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+        
+        .content-with-nav {
+            padding-bottom: 80px;
+        }
+        
+        @media (min-width: 768px) {
+            .app-container {
+                max-width: 768px;
+                margin: 0 auto;
+                box-shadow: 0 0 30px rgba(0,0,0,0.2);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <div class="notification-banner" id="notificationBanner">
+            <span>🔔 Ative notificações para lembretes!</span>
+            <button onclick="requestNotificationPermission()">Ativar</button>
+        </div>
+        
+        <div class="safe-area-top">
+            <div class="app-header">
+                <h1>⚡ Diego 2026</h1>
+                <div class="date" id="headerDate"></div>
+            </div>
+        </div>
+        
+        <div class="content content-with-nav" id="mainContent">
+            <div class="section">
+                <div class="section-title">📊 Progresso do Dia</div>
+                <div class="progress-ring">
+                    <svg width="150" height="150">
+                        <circle class="progress-ring-circle" cx="75" cy="75" r="65"></circle>
+                        <circle class="progress-ring-progress" cx="75" cy="75" r="65" 
+                                stroke-dasharray="408.4" stroke-dashoffset="408.4" id="progressCircle"></circle>
+                    </svg>
+                    <div class="progress-ring-text" id="progressText">0%</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">✅ Checklist Diário</div>
+                <div id="tasksList"></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">🎯 Metas 2026</div>
+                <div class="goals-section" id="goalsSection"></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">📅 Progresso Semanal</div>
+                <div class="week-days" id="weekDays"></div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">📈 Estatísticas</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="statBooks">0</div>
+                        <div class="stat-label">Livros</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statWorkouts">0</div>
+                        <div class="stat-label">Treinos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statPrayer">0</div>
+                        <div class="stat-label">Orações</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="statFocus">0</div>
+                        <div class="stat-label">Deep Work</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">⏱️ Timer Pomodoro</div>
+                <div class="timer-container">
+                    <div style="margin-bottom: 15px;">
+                        <button class="btn btn-small btn-outline" onclick="setTimer(25)">25min</button>
+                        <button class="btn btn-small btn-outline" onclick="setTimer(5)">5min</button>
+                        <button class="btn btn-small btn-outline" onclick="setTimer(50)">50min</button>
+                    </div>
+                    <div class="timer-display" id="timerDisplay">25:00</div>
+                    <div class="timer-buttons">
+                        <button class="btn" onclick="startTimer()">▶️ Iniciar</button>
+                        <button class="btn btn-secondary" onclick="pauseTimer()">⏸️ Pausar</button>
+                        <button class="btn btn-secondary" onclick="resetTimer()">🔄 Resetar</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <div class="section-title">📝 Notas do Dia</div>
+                <textarea class="notes-area" id="dailyNotes" placeholder="Insights, aprendizados, gratidão..."></textarea>
+                <button class="btn btn-success" onclick="saveNotes()" style="width: 100%; margin-top: 10px;">💾 Salvar Notas</button>
+            </div>
+        </div>
+        
+        <div class="bottom-nav safe-area-bottom">
+            <div class="nav-item active">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Início</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">📅</div>
+                <div class="nav-label">Agenda</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">📊</div>
+                <div class="nav-label">Metas</div>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">⚙️</div>
+                <div class="nav-label">Config</div>
+            </div>
+        </div>
+        
+        <div class="toast" id="toast"></div>
+    </div>
+
+    <script>
+        let notificationPermission = 'default';
+        let currentData = null;
+        let timerInterval = null;
+        let timeLeft = 25 * 60;
+        let timerRunning = false;
+        
+        const dailyTasks = [
+            { id: 'treino', emoji: '🏃', text: 'Treino matinal', time: '05:00', type: 'workout', notify: true },
+            { id: 'evangelho', emoji: '📖', text: 'Evangelho + Provérbios', time: '06:30', type: 'prayer', notify: true },
+            { id: 'cafe', emoji: '☕', text: 'Café com esposa', time: '07:00', type: 'family', notify: false },
+            { id: 'estrategia', emoji: '📝', text: 'Estratégia escrita', time: '07:30', type: 'focus', notify: true },
+            { id: 'mercado', emoji: '🏢', text: 'Mercado Liderança', time: '08:00', type: 'work', notify: true },
+            { id: 'leitura-almoco', emoji: '📚', text: 'Leitura negócios (35-45p)', time: '12:00', type: 'reading', notify: true },
+            { id: 'levels', emoji: '🥤', text: 'Levels Nutrition', time: '14:00', type: 'work', notify: true },
+            { id: 'jantar', emoji: '👫', text: 'Jantar casal + oração', time: '18:00', type: 'family', notify: true },
+            { id: 'leitura-noite', emoji: '📖', text: 'Leitura leve (5-10p)', time: '21:00', type: 'reading', notify: false },
+            { id: 'sono', emoji: '😴', text: 'Dormir 22h', time: '21:45', type: 'health', notify: true }
+        ];
+        
+        const goals2026 = [
+            { 
+                title: '💼 Faturamento 2026: R$ 7,0M', 
+                current: 4100000, 
+                target: 7000000, 
+                unit: 'R$',
+                key: 'revenue',
+                format: 'currency'
+            },
+            { 
+                title: '🏪 Unidades Operacionais', 
+                current: 3, 
+                target: 4, 
+                unit: 'lojas',
+                key: 'units',
+                format: 'number'
+            },
+            { 
+                title: '🏷️ Marca Própria Levels', 
+                current: 0, 
+                target: 400000, 
+                unit: 'R$',
+                key: 'brand',
+                format: 'currency'
+            },
+            { 
+                title: '📊 Margem Líquida', 
+                current: 10, 
+                target: 15, 
+                unit: '%',
+                key: 'margin',
+                format: 'percent'
+            },
+            { 
+                title: '⏱️ Horas Trabalho/Semana', 
+                current: 60, 
+                target: 40, 
+                unit: 'horas',
+                key: 'worktime',
+                format: 'number',
+                reverse: true
+            },
+            { 
+                title: '📚 Livros Lidos', 
+                current: 0, 
+                target: 52, 
+                unit: 'livros',
+                key: 'books',
+                format: 'number'
+            }
+        ];
+        
+        async function requestNotificationPermission() {
+            if ('Notification' in window) {
+                const permission = await Notification.requestPermission();
+                notificationPermission = permission;
+                
+                if (permission === 'granted') {
+                    showToast('✅ Notificações ativadas!');
+                    document.getElementById('notificationBanner').classList.remove('show');
+                    scheduleAllNotifications();
+                } else {
+                    showToast('Para ativar: Ajustes iOS → Diego 2026 → Notificações');
+                }
+            }
+        }
+        
+        function scheduleAllNotifications() {
+            if (notificationPermission !== 'granted') return;
+            dailyTasks.forEach(task => {
+                if (task.notify) scheduleNotification(task);
+            });
+        }
+        
+        function scheduleNotification(task) {
+            const now = new Date();
+            const [hours, minutes] = task.time.split(':');
+            const scheduledTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
+            
+            if (scheduledTime < now) {
+                scheduledTime.setDate(scheduledTime.getDate() + 1);
+            }
+            
+            const delay = scheduledTime - now;
+            
+            setTimeout(() => {
+                if (notificationPermission === 'granted') {
+                    new Notification(`${task.emoji} ${task.text}`, {
+                        body: `Hora de: ${task.text}`,
+                        vibrate: [200, 100, 200],
+                        tag: task.id
+                    });
+                }
+                setTimeout(() => scheduleNotification(task), 24 * 60 * 60 * 1000);
+            }, delay);
+        }
+        
+        async function loadData() {
+            try {
+                const tasksResult = await window.storage.get('daily-tasks-v2', false);
+                const statsResult = await window.storage.get('week-stats-v2', false);
+                const notesResult = await window.storage.get('daily-notes-v2', false);
+                const weekResult = await window.storage.get('week-progress-v2', false);
+                const goalsResult = await window.storage.get('goals-2026-v2', false);
+                
+                if (tasksResult) {
+                    return {
+                        tasks: JSON.parse(tasksResult.value),
+                        stats: statsResult ? JSON.parse(statsResult.value) : { books: 0, workouts: 0, prayer: 0, focus: 0 },
+                        notes: notesResult ? notesResult.value : '',
+                        week: weekResult ? JSON.parse(weekResult.value) : Array(7).fill(false),
+                        goals: goalsResult ? JSON.parse(goalsResult.value) : goals2026
+                    };
+                }
+            } catch (error) {
+                console.log('Primeira vez usando o app');
+            }
+            
+            return {
+                tasks: dailyTasks.map(t => ({ ...t, completed: false })),
+                stats: { books: 0, workouts: 0, prayer: 0, focus: 0 },
+                notes: '',
+                week: Array(7).fill(false),
+                goals: goals2026
+            };
+        }
+        
+        async function saveData(data) {
+            try {
+                await window.storage.set('daily-tasks-v2', JSON.stringify(data.tasks), false);
+                await window.storage.set('week-stats-v2', JSON.stringify(data.stats), false);
+                await window.storage.set('daily-notes-v2', data.notes, false);
+                await window.storage.set('week-progress-v2', JSON.stringify(data.week), false);
+                await window.storage.set('goals-2026-v2', JSON.stringify(data.goals), false);
+            } catch (error) {
+                console.error('Erro ao salvar:', error);
+            }
+        }
+        
+        function formatValue(value, format) {
+            if (format === 'currency') {
+                return 'R$ ' + (value / 1000000).toFixed(1) + 'M';
+            } else if (format === 'percent') {
+                return value + '%';
+            }
+            return value;
+        }
+        
+        function renderGoals(goals) {
+            const container = document.getElementById('goalsSection');
+            container.innerHTML = goals.map((goal, index) => {
+                const progress = goal.reverse 
+                    ? Math.round((1 - (goal.current - goal.target) / (60 - goal.target)) * 100)
+                    : Math.round((goal.current / goal.target) * 100);
+                const safeProgress = Math.max(0, Math.min(100, progress));
+                
+                return `
+                    <div class="goal-item">
+                        <div class="goal-title">${goal.title}</div>
+                        <div class="goal-progress-bar">
+                            <div class="goal-progress-fill" style="width: ${safeProgress}%">
+                                ${safeProgress}%
+                            </div>
+                        </div>
+                        <div class="goal-values">
+                            ${formatValue(goal.current, goal.format)} / ${formatValue(goal.target, goal.format)}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function renderTasks(tasks) {
+            const container = document.getElementById('tasksList');
+            container.innerHTML = tasks.map((task, index) => `
+                <div class="task-item ${task.completed ? 'completed' : ''}" onclick="toggleTask(${index})">
+                    <div class="task-checkbox"></div>
+                    <div class="task-emoji">${task.emoji}</div>
+                    <div class="task-content">
+                        <div class="task-text">${task.text}</div>
+                        <div class="task-time">${task.time}</div>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateProgress(tasks);
+        }
+        
+        function updateProgress(tasks) {
+            const completed = tasks.filter(t => t.completed).length;
+            const total = tasks.length;
+            const percentage = Math.round((completed / total) * 100);
+            
+            document.getElementById('progressText').textContent = percentage + '%';
+            
+            const circle = document.getElementById('progressCircle');
+            const circumference = 408.4;
+            const offset = circumference - (percentage / 100) * circumference;
+            circle.style.strokeDashoffset = offset;
+        }
+        
+        function renderWeek(week) {
+            const days = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+            const today = new Date().getDay();
+            const container = document.getElementById('weekDays');
+            
+            container.innerHTML = week.map((completed, index) => `
+                <div class="day-badge ${completed ? 'completed' : ''} ${index === today ? 'today' : ''}" 
+                     onclick="toggleDay(${index})">
+                    <div class="day-name">${days[index]}</div>
+                    <div class="day-icon">${completed ? '✅' : '⭕'}</div>
+                </div>
+            `).join('');
+        }
+        
+        function renderStats(stats) {
+            document.getElementById('statBooks').textContent = stats.books.toFixed(1);
+            document.getElementById('statWorkouts').textContent = stats.workouts;
+            document.getElementById('statPrayer').textContent = stats.prayer;
+            document.getElementById('statFocus').textContent = stats.focus;
+        }
+        
+        async function toggleTask(index) {
+            currentData.tasks[index].completed = !currentData.tasks[index].completed;
+            
+            if (currentData.tasks[index].completed) {
+                const task = currentData.tasks[index];
+                if (task.type === 'workout') incrementStat('workouts');
+                if (task.type === 'prayer') incrementStat('prayer');
+                if (task.type === 'reading') incrementStat('books', 0.14);
+                
+                if ('vibrate' in navigator) navigator.vibrate(50);
+            }
+            
+            await saveData(currentData);
+            renderTasks(currentData.tasks);
+        }
+        
+        async function toggleDay(index) {
+            currentData.week[index] = !currentData.week[index];
+            await saveData(currentData);
+            renderWeek(currentData.week);
+            if ('vibrate' in navigator) navigator.vibrate(50);
+        }
+        
+        async function incrementStat(stat, value = 1) {
+            currentData.stats[stat] = (currentData.stats[stat] || 0) + value;
+            await saveData(currentData);
+            renderStats(currentData.stats);
+        }
+        
+        async function saveNotes() {
+            currentData.notes = document.getElementById('dailyNotes').value;
+            await saveData(currentData);
+            showToast('✅ Notas salvas!');
+        }
+        
+        function setTimer(minutes) {
+            timeLeft = minutes * 60;
+            updateTimerDisplay();
+            pauseTimer();
+        }
+        
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            document.getElementById('timerDisplay').textContent = 
+                `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+        }
+        
+        function startTimer() {
+            if (!timerRunning) {
+                timerRunning = true;
+                timerInterval = setInterval(() => {
+                    if (timeLeft > 0) {
+                        timeLeft--;
+                        updateTimerDisplay();
+                    } else {
+                        pauseTimer();
+                        if ('vibrate' in navigator) navigator.vibrate([200, 100, 200, 100, 200]);
+                        if (confirm('⏰ Timer finalizado! Registrar sessão Deep Work?')) {
+                            incrementStat('focus');
+                        }
+                    }
+                }, 1000);
+            }
+        }
+        
+        function pauseTimer() {
+            timerRunning = false;
+            clearInterval(timerInterval);
+        }
+        
+        function resetTimer() {
+            pauseTimer();
+            timeLeft = 25 * 60;
+            updateTimerDisplay();
+        }
+        
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+        
+        function updateDate() {
+            const now = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('headerDate').textContent = 
+                now.toLocaleDateString('pt-BR', options);
+        }
+        
+        async function init() {
+            updateDate();
+            currentData = await loadData();
+            renderTasks(currentData.tasks);
+            renderGoals(currentData.goals);
+            renderWeek(currentData.week);
+            renderStats(currentData.stats);
+            document.getElementById('dailyNotes').value = currentData.notes;
+            
+            if ('Notification' in window) {
+                notificationPermission = Notification.permission;
+                if (notificationPermission === 'default') {
+                    document.getElementById('notificationBanner').classList.add('show');
+                } else if (notificationPermission === 'granted') {
+                    scheduleAllNotifications();
+                }
+            }
+            
+            setInterval(updateDate, 60000);
+        }
+        
+        init();
+    </script>
+</body>
+</html>
