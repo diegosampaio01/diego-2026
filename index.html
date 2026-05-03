@@ -7,7 +7,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Diego 2026">
     <meta name="theme-color" content="#0f0f0f">
-    <title>Diego 2026 - Sistema Completo</title>
+    <title>Diego 2026 v4.1</title>
     <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -742,19 +742,19 @@
     </div>
 
     <div class="bottom-nav">
-        <div class="nav-item active" id="nav-home" onclick="switchTab('home')">
+        <div class="nav-item active" id="nav-home" data-tab="home">
             <div class="nav-icon">🏠</div><div class="nav-label">Início</div>
         </div>
-        <div class="nav-item" id="nav-focus" onclick="switchTab('focus')">
+        <div class="nav-item" id="nav-focus" data-tab="focus">
             <div class="nav-icon">⚡</div><div class="nav-label">Foco</div>
         </div>
-        <div class="nav-item" id="nav-goals" onclick="switchTab('goals')">
+        <div class="nav-item" id="nav-goals" data-tab="goals">
             <div class="nav-icon">🎯</div><div class="nav-label">Metas</div>
         </div>
-        <div class="nav-item" id="nav-reflection" onclick="switchTab('reflection')">
+        <div class="nav-item" id="nav-reflection" data-tab="reflection">
             <div class="nav-icon">🙏</div><div class="nav-label">Reflexão</div>
         </div>
-        <div class="nav-item" id="nav-config" onclick="switchTab('config')">
+        <div class="nav-item" id="nav-config" data-tab="config">
             <div class="nav-icon">⚙️</div><div class="nav-label">Config</div>
         </div>
     </div>
@@ -1269,6 +1269,12 @@ async function init() {
 
 init();
 setInterval(updateDate, 60000);
+
+// Navegação via addEventListener (mais confiável no iOS)
+document.querySelectorAll('.nav-item[data-tab]').forEach(el => {
+    el.addEventListener('click', () => switchTab(el.dataset.tab));
+    el.addEventListener('touchend', (e) => { e.preventDefault(); switchTab(el.dataset.tab); });
+});
 </script>
 </body>
 </html>
