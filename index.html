@@ -5,1213 +5,1099 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Diego 2026">
-    <meta name="theme-color" content="#667eea">
-    <title>Diego 2026 - Sistema Completo</title>
+    <meta name="apple-mobile-web-app-title" content="Bastião 2026">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Bastião 2026 - Sistema de Vida</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
         :root {
             --primary: #667eea;
-            --primary-dark: #5568d3;
             --secondary: #764ba2;
             --success: #28a745;
             --warning: #ffc107;
             --danger: #dc3545;
             --light: #f8f9fa;
             --dark: #343a40;
+            --accent: #f6d365;
+            --bg: #f0f2f5;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            background: var(--bg);
             min-height: 100vh;
-            padding: 0;
-            overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
-        
-        .app-container {
-            max-width: 100%;
-            min-height: 100vh;
-            background: white;
-        }
-        
+
+        .app-container { max-width: 100%; min-height: 100vh; background: white; }
+
+        /* HEADER */
         .app-header {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             color: white;
-            padding: 16px 20px;
-            text-align: center;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 16px 20px 12px;
             position: sticky;
             top: 0;
             z-index: 100;
-        }
-        
-        .app-header h1 {
-            font-size: 1.4em;
-            margin-bottom: 4px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.3);
         }
 
-        .header-sub {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.8em;
-            opacity: 0.9;
-        }
+        .header-row1 { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
 
-        .streak-badge {
-            background: #e8ff47;
+        .app-title { font-size: 1.3em; font-weight: 800; letter-spacing: -0.5px; }
+        .app-title span { color: var(--accent); }
+
+        .streak-pill {
+            background: var(--accent);
             color: #333;
-            font-size: 0.8em;
+            font-size: 0.75em;
             font-weight: 700;
-            padding: 2px 10px;
+            padding: 4px 12px;
             border-radius: 20px;
         }
 
-        .tema-banner {
-            margin: 12px 16px 0;
-            padding: 12px 16px;
-            border-radius: 12px;
+        .header-row2 { display: flex; justify-content: space-between; align-items: center; }
+        .header-date { font-size: 0.78em; opacity: 0.8; }
+
+        /* BABY BANNER */
+        .baby-banner {
+            background: linear-gradient(135deg, #ff9a9e, #fecfef);
+            padding: 10px 16px;
             display: flex;
             align-items: center;
-            gap: 12px;
-            border-left: 4px solid var(--primary);
+            gap: 10px;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: #5a1a2a;
+        }
+
+        /* TEMA BANNER */
+        .tema-banner {
+            margin: 10px 14px 0;
+            padding: 11px 14px;
+            border-radius: 12px;
             background: #f0f4ff;
+            border-left: 4px solid var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
         .tema-icon { font-size: 1.4em; }
-        .tema-label { font-size: 0.7em; color: #888; text-transform: uppercase; letter-spacing: 1px; }
-        .tema-title { font-weight: 700; font-size: 0.95em; color: var(--dark); }
+        .tema-label { font-size: 0.68em; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+        .tema-title { font-weight: 700; font-size: 0.92em; color: var(--dark); }
 
+        /* MIT */
         .mit-box {
-            margin: 10px 16px 0;
-            padding: 16px;
+            margin: 10px 14px 0;
+            padding: 14px;
             border-radius: 12px;
             background: linear-gradient(135deg, #f6d365, #fda085);
         }
 
-        .mit-label {
-            font-size: 0.7em;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1.5px;
-            margin-bottom: 8px;
-            color: #333;
-            opacity: 0.7;
-        }
+        .mit-label { font-size: 0.68em; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(0,0,0,0.5); margin-bottom: 7px; }
 
         .mit-input {
             width: 100%;
-            padding: 10px 12px;
+            padding: 9px 12px;
             border-radius: 8px;
             border: none;
-            font-size: 0.95em;
+            font-size: 0.92em;
             margin-bottom: 8px;
             background: rgba(255,255,255,0.75);
             font-family: inherit;
         }
 
-        .mit-saved-text {
-            font-weight: 700;
-            font-size: 1em;
-            margin-bottom: 10px;
-            color: #333;
-            line-height: 1.4;
-        }
+        .mit-saved { font-weight: 700; font-size: 0.95em; color: #333; margin-bottom: 8px; line-height: 1.4; }
 
-        .mit-btn {
-            background: #333;
-            color: white;
-            border: none;
-            padding: 9px 18px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            cursor: pointer;
-            margin-right: 6px;
-        }
-
+        .mit-btn { background: #333; color: white; border: none; padding: 8px 16px; border-radius: 20px; font-size: 0.82em; font-weight: 600; cursor: pointer; margin-right: 6px; }
         .mit-btn-green { background: #28a745; }
-        .mit-btn-ghost { background: rgba(0,0,0,0.2); }
-        
-        .content {
-            padding: 16px;
-            padding-bottom: 80px;
-        }
-        
-        .tab-content {
-            display: none;
-        }
-        
-        .tab-content.active {
-            display: block;
-        }
-        
-        .section {
-            background: white;
-            border-radius: 15px;
-            padding: 20px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-        }
-        
-        .section-title {
-            font-size: 1.1em;
-            color: var(--primary);
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .mit-btn-ghost { background: rgba(0,0,0,0.18); }
+
+        /* CONTENT */
+        .content { padding: 12px 14px 85px; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* SECTION */
+        .section { background: white; border-radius: 14px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
+
+        .section-title { font-size: 1em; color: var(--primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; font-weight: 700; }
+
+        /* BOLSA BADGE */
+        .bolsa-badge {
+            display: inline-block;
+            background: #e8f5e9;
+            color: #2e7d32;
+            font-size: 0.72em;
             font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: 6px;
         }
-        
-        .progress-ring {
-            width: 130px;
-            height: 130px;
-            margin: 10px auto;
-            position: relative;
-        }
-        
+
+        .bolsa-badge.off { background: #fafafa; color: #aaa; }
+
+        /* PROGRESS */
+        .progress-ring { width: 120px; height: 120px; margin: 8px auto; position: relative; }
         .progress-ring svg { transform: rotate(-90deg); }
-        
-        .progress-ring-circle {
-            fill: none;
-            stroke: var(--light);
-            stroke-width: 12;
-        }
-        
-        .progress-ring-progress {
-            fill: none;
-            stroke: var(--success);
-            stroke-width: 12;
-            stroke-linecap: round;
-            transition: stroke-dashoffset 0.5s ease;
-        }
-        
-        .progress-ring-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 1.8em;
-            font-weight: bold;
-            color: var(--primary);
-        }
-        
+        .progress-ring-circle { fill: none; stroke: var(--light); stroke-width: 10; }
+        .progress-ring-progress { fill: none; stroke: var(--success); stroke-width: 10; stroke-linecap: round; transition: stroke-dashoffset 0.5s ease; }
+        .progress-ring-text { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 1.6em; font-weight: bold; color: var(--primary); }
+
+        /* TASKS */
         .task-item {
             background: var(--light);
-            padding: 13px 15px;
-            margin-bottom: 8px;
-            border-radius: 12px;
+            padding: 11px 13px;
+            margin-bottom: 7px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             cursor: pointer;
             user-select: none;
             -webkit-user-select: none;
         }
-        
-        .task-item.completed {
-            background: #d4edda;
-            opacity: 0.7;
-        }
-        
-        .task-item.completed .task-text {
-            text-decoration: line-through;
-        }
-        
-        .task-checkbox {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            border: 3px solid var(--primary);
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            font-size: 14px;
-            color: white;
-        }
-        
-        .task-item.completed .task-checkbox {
-            background: var(--success);
-            border-color: var(--success);
-        }
-        
-        .task-emoji { font-size: 1.4em; flex-shrink: 0; }
-        .task-content { flex: 1; }
-        .task-text { font-size: 0.95em; color: var(--dark); margin-bottom: 2px; }
-        .task-time { font-size: 0.8em; color: #666; }
 
-        .timer-wrap { text-align: center; padding: 10px 0; }
-        .timer-label-text { font-size: 0.8em; color: #666; margin-bottom: 4px; }
-        .timer-display {
-            font-size: 3em;
-            font-weight: bold;
-            color: var(--primary);
-            letter-spacing: -2px;
-            margin: 6px 0;
+        .task-item.completed { background: #d4edda; opacity: 0.65; }
+        .task-item.completed .task-text { text-decoration: line-through; }
+        .task-item.optional { border-left: 3px solid var(--warning); }
+        .task-item.bolsa-task { border-left: 3px solid #4caf50; }
+
+        .task-checkbox {
+            width: 24px; height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--primary);
+            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: white; font-size: 13px; color: white;
         }
-        .timer-btns {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-top: 8px;
-        }
-        .btn-timer {
-            background: var(--light);
-            color: var(--dark);
-            border: 2px solid #ddd;
-            padding: 8px 14px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .btn-timer.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-        
-        .philosophy-card {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 18px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            border-left: 4px solid var(--primary);
-        }
-        .philosophy-card .quote {
-            font-style: italic;
-            font-size: 1em;
-            color: var(--dark);
-            margin-bottom: 8px;
-            line-height: 1.5;
-        }
-        .philosophy-card .author {
-            text-align: right;
-            color: #666;
-            font-size: 0.85em;
-        }
-        
-        .kaizen-input {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid var(--light);
-            border-radius: 8px;
-            font-size: 1em;
-            margin-top: 8px;
-            font-family: inherit;
-        }
-        
-        .timeline-item {
-            background: var(--light);
-            padding: 12px 15px;
-            margin-bottom: 8px;
-            border-radius: 12px;
-            border-left: 4px solid var(--primary);
-        }
-        .timeline-item.next { background: #fff3cd; border-left-color: var(--warning); }
-        .timeline-item.done { opacity: 0.5; border-left-color: var(--success); }
-        
-        .goal-card {
-            background: var(--light);
-            padding: 16px;
-            margin-bottom: 14px;
-            border-radius: 12px;
-        }
-        .goal-title { font-weight: bold; font-size: 0.95em; margin-bottom: 10px; color: var(--dark); }
-        .goal-progress-bar {
-            height: 24px;
-            background: #e9ecef;
-            border-radius: 12px;
-            overflow: hidden;
-            margin-bottom: 8px;
-        }
-        .goal-progress-fill {
-            height: 100%;
-            background: linear-gradient(90deg, var(--success), #20c997);
-            transition: width 0.5s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 0.85em;
-        }
-        
-        .pdca-section {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            margin-top: 12px;
-        }
-        .pdca-item {
-            background: white;
-            padding: 12px;
-            border-radius: 8px;
-            border: 2px solid var(--light);
-        }
-        .pdca-item h4 { color: var(--primary); margin-bottom: 8px; font-size: 0.9em; }
-        .pdca-item textarea {
-            width: 100%;
-            min-height: 70px;
-            border: none;
-            font-family: inherit;
-            font-size: 0.85em;
-            resize: none;
-            outline: none;
-            background: transparent;
-        }
-        
-        .btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-        }
-        .btn-secondary { background: #6c757d; }
-        .btn-success { background: var(--success); }
-        .btn-danger { background: var(--danger); }
-        
-        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .stat-card {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            padding: 18px;
-            border-radius: 12px;
-            text-align: center;
-        }
-        .stat-number { font-size: 2em; font-weight: bold; }
-        
-        .reflection-section textarea {
-            width: 100%;
-            min-height: 75px;
-            padding: 10px 12px;
-            border: 2px solid var(--light);
-            border-radius: 8px;
-            margin-top: 8px;
-            font-family: inherit;
-            resize: vertical;
-        }
-        
-        .bottom-nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-around;
-            padding: 10px 0;
-            z-index: 200;
-        }
-        
-        .nav-item {
-            flex: 1;
-            text-align: center;
-            padding: 8px;
-            cursor: pointer;
-            color: #666;
-            transition: color 0.2s;
-        }
-        .nav-item.active { color: var(--primary); }
-        .nav-icon { font-size: 1.5em; margin-bottom: 3px; }
-        .nav-label { font-size: 0.65em; }
-        
-        .toast {
-            position: fixed;
-            bottom: 80px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--dark);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            z-index: 2000;
-            opacity: 0;
-            transition: opacity 0.3s;
-            font-size: 0.9em;
-            white-space: nowrap;
-        }
-        .toast.show { opacity: 1; }
-        
-        .week-days {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 6px;
-        }
+        .task-item.completed .task-checkbox { background: var(--success); border-color: var(--success); }
+
+        .task-emoji { font-size: 1.3em; flex-shrink: 0; }
+        .task-content { flex: 1; }
+        .task-text { font-size: 0.9em; color: var(--dark); margin-bottom: 1px; }
+        .task-time { font-size: 0.75em; color: #888; }
+        .task-tag { font-size: 0.65em; color: white; background: var(--warning); padding: 1px 6px; border-radius: 8px; margin-left: 4px; font-weight: 600; }
+        .task-tag.green { background: #4caf50; }
+
+        /* SEMANA */
+        .week-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; }
         .day-badge {
             aspect-ratio: 1;
             background: var(--light);
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            border-radius: 9px;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
             cursor: pointer;
-            font-size: 0.7em;
+            font-size: 0.65em;
             gap: 2px;
         }
-        .day-badge.completed {
-            background: linear-gradient(135deg, var(--success), #20c997);
-            color: white;
-            font-weight: 700;
-        }
+        .day-badge.completed { background: linear-gradient(135deg, var(--success), #20c997); color: white; font-weight: 700; }
 
-        .tema-check-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
-            background: var(--light);
+        /* STATS */
+        .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+        .stat-card { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 14px; border-radius: 10px; text-align: center; }
+        .stat-number { font-size: 1.8em; font-weight: bold; }
+        .stat-label { font-size: 0.75em; opacity: 0.85; margin-top: 2px; }
+
+        /* BOLSA SECTION */
+        .bolsa-section { background: #e8f5e9; border-radius: 10px; padding: 14px; margin-bottom: 10px; border: 1px solid #c8e6c9; }
+        .bolsa-title { font-weight: 700; font-size: 0.9em; color: #2e7d32; margin-bottom: 8px; }
+        .bolsa-dias { display: flex; gap: 6px; margin-bottom: 8px; }
+        .bolsa-dia {
+            flex: 1;
+            text-align: center;
+            padding: 7px 4px;
             border-radius: 8px;
-            margin-bottom: 6px;
+            background: white;
+            border: 2px solid #c8e6c9;
+            font-size: 0.75em;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 0.9em;
+            color: #555;
+        }
+        .bolsa-dia.ativo { background: #4caf50; color: white; border-color: #4caf50; }
+        .bolsa-input { width: 100%; padding: 8px 10px; border: 1px solid #c8e6c9; border-radius: 8px; font-family: inherit; font-size: 0.85em; margin-bottom: 6px; background: white; }
+
+        /* TIMELINE */
+        .timeline-item { background: var(--light); padding: 11px 13px; margin-bottom: 7px; border-radius: 10px; border-left: 3px solid var(--primary); }
+        .timeline-item.next { background: #fff8e1; border-left-color: var(--warning); }
+        .timeline-item.done { opacity: 0.5; border-left-color: var(--success); }
+
+        /* TEMA CHECKLIST */
+        .tema-check-item {
+            display: flex; align-items: center; gap: 9px;
+            padding: 9px 11px; background: var(--light);
+            border-radius: 8px; margin-bottom: 6px;
+            cursor: pointer; font-size: 0.88em;
         }
         .tema-check-item.done { opacity: 0.5; text-decoration: line-through; }
-        .check-circle {
-            width: 22px; height: 22px;
-            border-radius: 50%;
-            border: 2px solid #ccc;
-            flex-shrink: 0;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 12px;
-            background: white;
+        .check-circle { width: 20px; height: 20px; border-radius: 50%; border: 2px solid #ccc; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; background: white; }
+        .tema-check-item.done .check-circle { background: var(--success); border-color: var(--success); color: white; }
+
+        /* TIMER */
+        .timer-wrap { text-align: center; padding: 8px 0; }
+        .timer-lbl { font-size: 0.78em; color: #888; margin-bottom: 4px; }
+        .timer-display { font-size: 2.8em; font-weight: bold; color: var(--primary); letter-spacing: -2px; margin: 4px 0; }
+        .timer-btns { display: flex; gap: 7px; justify-content: center; flex-wrap: wrap; margin-top: 7px; }
+        .btn-timer { background: var(--light); color: var(--dark); border: 2px solid #ddd; padding: 7px 13px; border-radius: 18px; font-size: 0.82em; font-weight: 600; cursor: pointer; }
+        .btn-timer.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+        /* METAS */
+        .goal-card { background: var(--light); padding: 14px; margin-bottom: 12px; border-radius: 10px; }
+        .goal-title { font-weight: 700; font-size: 0.9em; margin-bottom: 9px; color: var(--dark); }
+        .goal-bar { height: 22px; background: #e9ecef; border-radius: 11px; overflow: hidden; margin-bottom: 6px; }
+        .goal-fill { height: 100%; background: linear-gradient(90deg, var(--success), #20c997); display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.8em; transition: width 0.5s; }
+        .goal-nums { display: flex; justify-content: space-between; font-size: 0.8em; color: #888; margin-bottom: 6px; }
+        .goal-input { width: 100%; padding: 7px 10px; border-radius: 7px; border: 2px solid #e9ecef; font-family: inherit; font-size: 0.88em; }
+
+        /* PDCA */
+        .pdca-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+        .pdca-item { background: var(--light); padding: 11px; border-radius: 8px; }
+        .pdca-item h4 { color: var(--primary); margin-bottom: 7px; font-size: 0.85em; }
+        .pdca-item textarea { width: 100%; min-height: 65px; border: none; font-family: inherit; font-size: 0.83em; resize: none; outline: none; background: transparent; }
+
+        /* KAIZEN */
+        .kaizen-input { width: 100%; padding: 11px; border: 2px solid var(--light); border-radius: 8px; font-size: 0.9em; margin-top: 7px; font-family: inherit; }
+
+        /* REFLEXÃO */
+        .reflect-lbl { font-weight: 600; font-size: 0.85em; color: var(--dark); margin-top: 10px; display: block; }
+        .reflect-ta { width: 100%; min-height: 70px; padding: 9px 11px; border: 2px solid var(--light); border-radius: 8px; margin-top: 5px; font-family: inherit; font-size: 0.88em; resize: vertical; }
+
+        /* BTNS */
+        .btn { background: var(--primary); color: white; border: none; padding: 11px 20px; border-radius: 22px; font-size: 0.92em; font-weight: 600; cursor: pointer; width: 100%; margin-top: 9px; }
+        .btn-success { background: var(--success); }
+        .btn-secondary { background: #6c757d; }
+        .btn-danger { background: var(--danger); }
+
+        /* QUOTE */
+        .quote-card { background: linear-gradient(135deg, #f5f7fa, #c3cfe2); padding: 16px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid var(--primary); }
+        .quote-text { font-style: italic; font-size: 0.95em; color: var(--dark); margin-bottom: 6px; line-height: 1.5; }
+        .quote-author { text-align: right; color: #777; font-size: 0.82em; }
+
+        /* BOTTOM NAV */
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: white; box-shadow: 0 -2px 12px rgba(0,0,0,0.1);
+            display: flex; justify-content: space-around;
+            padding: 9px 0 14px; z-index: 200;
         }
-        .tema-check-item.done .check-circle {
-            background: var(--success);
-            border-color: var(--success);
-            color: white;
-        }
-        
-        @media (min-width: 768px) {
-            .app-container { max-width: 768px; margin: 0 auto; box-shadow: 0 0 30px rgba(0,0,0,0.2); }
-        }
+        .nav-item { flex: 1; text-align: center; padding: 6px; cursor: pointer; color: #999; }
+        .nav-item.active { color: var(--primary); }
+        .nav-icon { font-size: 1.4em; margin-bottom: 2px; }
+        .nav-label { font-size: 0.62em; text-transform: uppercase; letter-spacing: 0.3px; }
+
+        /* TOAST */
+        .toast { position: fixed; bottom: 82px; left: 50%; transform: translateX(-50%); background: var(--dark); color: white; padding: 11px 22px; border-radius: 22px; z-index: 2000; opacity: 0; transition: opacity 0.3s; font-size: 0.88em; white-space: nowrap; }
+        .toast.show { opacity: 1; }
+
+        @media (min-width: 768px) { .app-container { max-width: 768px; margin: 0 auto; box-shadow: 0 0 30px rgba(0,0,0,0.15); } }
     </style>
 </head>
 <body>
-    <div class="app-container">
+<div class="app-container">
 
-        <div class="app-header">
-            <h1>⚡ Diego 2026</h1>
-            <div class="header-sub">
-                <span id="headerDate"></span>
-                <span class="streak-badge" id="streakBadge">🔥 0 dias</span>
-            </div>
+    <div class="app-header">
+        <div class="header-row1">
+            <div class="app-title">⚡ Bastião <span>2026</span></div>
+            <div class="streak-pill" id="streakBadge">🔥 0 dias</div>
         </div>
-
-        <div class="tema-banner" id="temaBanner">
-            <div class="tema-icon" id="temaIcon">📅</div>
-            <div>
-                <div class="tema-label">Foco de hoje</div>
-                <div class="tema-title" id="temaTitulo">Carregando...</div>
-            </div>
+        <div class="header-row2">
+            <div class="header-date" id="headerDate"></div>
         </div>
-
-        <div class="mit-box">
-            <div class="mit-label">🧠 MIT — Tarefa mais importante do dia</div>
-            <div id="mitContent"></div>
-        </div>
-        
-        <div class="content">
-
-            <!-- ABA INÍCIO -->
-            <div id="tab-home" class="tab-content active">
-                <div class="philosophy-card" id="dailyQuote"></div>
-                
-                <div class="section">
-                    <div class="section-title">📊 Progresso do Dia</div>
-                    <div class="progress-ring">
-                        <svg width="130" height="130">
-                            <circle class="progress-ring-circle" cx="65" cy="65" r="55"></circle>
-                            <circle class="progress-ring-progress" cx="65" cy="65" r="55" 
-                                    stroke-dasharray="345.4" stroke-dashoffset="345.4" id="progressCircle"></circle>
-                        </svg>
-                        <div class="progress-ring-text" id="progressText">0%</div>
-                    </div>
-                </div>
-                
-                <div class="section">
-                    <div class="section-title">✅ Checklist Diário</div>
-                    <div id="tasksList"></div>
-                </div>
-                
-                <div class="section">
-                    <div class="section-title">🔄 Kaizen do Dia</div>
-                    <label style="font-weight:600;font-size:0.9em;">Uma melhoria para amanhã (+1%):</label>
-                    <input type="text" class="kaizen-input" id="kaizenInput" placeholder="Ex: Delegar X tarefa, ligar para fornecedor Y...">
-                    <button class="btn btn-success" onclick="saveKaizen()">💾 Salvar Melhoria</button>
-                </div>
-                
-                <div class="section">
-                    <div class="section-title">📅 Semana — Streak</div>
-                    <div class="week-days" id="weekDays"></div>
-                </div>
-            </div>
-            
-            <!-- ABA FOCO -->
-            <div id="tab-agenda" class="tab-content">
-
-                <div class="section">
-                    <div class="section-title">🎯 Checklist do Tema</div>
-                    <div id="temaChecklist"></div>
-                </div>
-
-                <div class="section">
-                    <div class="section-title">⏱️ Timer de Foco</div>
-                    <div class="timer-wrap">
-                        <div class="timer-label-text" id="timerLabel">Foco — 25 min</div>
-                        <div class="timer-display" id="timerDisplay">25:00</div>
-                        <div class="timer-btns">
-                            <button class="btn-timer" onclick="setTimer(25,'Foco')">25 min</button>
-                            <button class="btn-timer" onclick="setTimer(50,'Deep Work')">50 min</button>
-                            <button class="btn-timer" onclick="setTimer(5,'Pausa')">Pausa 5</button>
-                        </div>
-                        <div class="timer-btns">
-                            <button class="btn-timer" id="timerStartBtn" onclick="toggleTimer()">▶ Iniciar</button>
-                            <button class="btn-timer" onclick="resetTimer()">↺ Reset</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="section">
-                    <div class="section-title">📅 Timeline do Dia</div>
-                    <div id="timelineList"></div>
-                </div>
-                
-                <div class="section">
-                    <div class="section-title">📈 Estatísticas</div>
-                    <div class="stats-grid">
-                        <div class="stat-card"><div class="stat-number" id="statBooks">0</div><div>Livros</div></div>
-                        <div class="stat-card"><div class="stat-number" id="statWorkouts">0</div><div>Treinos</div></div>
-                        <div class="stat-card"><div class="stat-number" id="statPrayer">0</div><div>Orações</div></div>
-                        <div class="stat-card"><div class="stat-number" id="statFocus">0</div><div>Deep Work</div></div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- ABA METAS -->
-            <div id="tab-goals" class="tab-content">
-                <div class="section">
-                    <div class="section-title">🎯 Metas 2026 - Método Falconi</div>
-                    <div id="goalsDetailed"></div>
-                </div>
-                <div class="section">
-                    <div class="section-title">🔄 PDCA Semanal</div>
-                    <div class="pdca-section">
-                        <div class="pdca-item"><h4>P - Plan</h4><textarea id="pdcaPlan" placeholder="Metas desta semana..."></textarea></div>
-                        <div class="pdca-item"><h4>D - Do</h4><textarea id="pdcaDo" placeholder="O que executei..."></textarea></div>
-                        <div class="pdca-item"><h4>C - Check</h4><textarea id="pdcaCheck" placeholder="Resultados obtidos..."></textarea></div>
-                        <div class="pdca-item"><h4>A - Act</h4><textarea id="pdcaAct" placeholder="Ajustes para próxima..."></textarea></div>
-                    </div>
-                    <button class="btn btn-success" onclick="savePDCA()">💾 Salvar PDCA</button>
-                </div>
-            </div>
-            
-            <!-- ABA REFLEXÃO -->
-            <div id="tab-reflection" class="tab-content">
-                <div class="section">
-                    <div class="section-title">🙏 Exame Diário</div>
-                    <div class="reflection-section">
-                        <label><strong>Servi hoje?</strong> (família, equipe, clientes)</label>
-                        <textarea id="reflectServe"></textarea>
-                        <label><strong>Fui humilde?</strong> (reconheci erros?)</label>
-                        <textarea id="reflectHumble"></textarea>
-                        <label><strong>3 Gratidões:</strong></label>
-                        <textarea id="reflectGratitude" placeholder="1. &#10;2. &#10;3. "></textarea>
-                        <label><strong>Vivi com propósito eterno?</strong></label>
-                        <textarea id="reflectPurpose"></textarea>
-                        <button class="btn btn-success" onclick="saveReflection()">💾 Salvar Reflexão</button>
-                    </div>
-                </div>
-                <div class="section">
-                    <div class="section-title">🧘 Controle Estoico</div>
-                    <div class="reflection-section">
-                        <label><strong>O que estava sob meu controle hoje?</strong></label>
-                        <textarea id="stoicControl"></textarea>
-                        <label><strong>O que não estava?</strong> (aceitei?)</label>
-                        <textarea id="stoicAccept"></textarea>
-                        <label><strong>Agi com virtude?</strong></label>
-                        <textarea id="stoicVirtue"></textarea>
-                        <button class="btn btn-success" onclick="saveStoic()">💾 Salvar Reflexão Estoica</button>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- ABA CONFIG -->
-            <div id="tab-config" class="tab-content">
-                <div class="section">
-                    <div class="section-title">⚙️ Configurações</div>
-                    <button class="btn" onclick="exportData()">📥 Exportar Dados</button>
-                    <button class="btn btn-secondary" onclick="importData()">📤 Importar Dados</button>
-                    <button class="btn btn-danger" onclick="resetWeek()">🔄 Resetar Semana</button>
-                    <button class="btn btn-danger" onclick="resetAll()">⚠️ Resetar Tudo</button>
-                </div>
-                <div class="section">
-                    <div class="section-title">📚 Sobre</div>
-                    <p><strong>Diego 2026 - Sistema de Vida</strong></p>
-                    <p style="color:#666;margin-top:4px;">Versão 4.1</p>
-                    <ul style="margin-left:20px;margin-top:12px;line-height:2;">
-                        <li>🔄 Kaizen · 📊 Falconi · 🙏 Jesus · 🧘 Estoicismo</li>
-                        <li>🧠 Eat That Frog · ⚡ Deep Work · 🎯 Essentialism</li>
-                        <li>🔗 Atomic Habits · 📈 Peter Drucker</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-        
-        <div class="bottom-nav">
-            <div class="nav-item active" id="nav-home">
-                <div class="nav-icon">🏠</div>
-                <div class="nav-label">Início</div>
-            </div>
-            <div class="nav-item" id="nav-agenda">
-                <div class="nav-icon">⚡</div>
-                <div class="nav-label">Foco</div>
-            </div>
-            <div class="nav-item" id="nav-goals">
-                <div class="nav-icon">🎯</div>
-                <div class="nav-label">Metas</div>
-            </div>
-            <div class="nav-item" id="nav-reflection">
-                <div class="nav-icon">🙏</div>
-                <div class="nav-label">Reflexão</div>
-            </div>
-            <div class="nav-item" id="nav-config">
-                <div class="nav-icon">⚙️</div>
-                <div class="nav-label">Config</div>
-            </div>
-        </div>
-        
-        <div class="toast" id="toast"></div>
     </div>
 
-    <script>
-        var dailyTasks = [
-            { id: 'treino',         emoji: '🏃', text: 'Treino matinal',           time: '05:00', type: 'workout' },
-            { id: 'evangelho',      emoji: '📖', text: 'Evangelho + Provérbios',   time: '06:30', type: 'prayer' },
-            { id: 'cafe',           emoji: '☕', text: 'Café com esposa',          time: '07:00', type: 'family' },
-            { id: 'mit',            emoji: '🧠', text: 'Definir MIT do dia',       time: '08:00', type: 'focus' },
-            { id: 'estrategia',     emoji: '📝', text: 'Bloco estratégico (tema)', time: '09:00', type: 'focus' },
-            { id: 'mercado',        emoji: '🏢', text: 'Mercado Liderança',        time: '10:00', type: 'work' },
-            { id: 'leitura-almoco', emoji: '📚', text: 'Leitura negócios',         time: '12:00', type: 'reading' },
-            { id: 'levels',         emoji: '🥤', text: 'Levels Nutrition',         time: '14:00', type: 'work' },
-            { id: 'jantar',         emoji: '👫', text: 'Jantar + oração casal',    time: '18:00', type: 'family' },
-            { id: 'leitura-noite',  emoji: '📖', text: 'Leitura leve',             time: '21:00', type: 'reading' },
-            { id: 'sono',           emoji: '😴', text: 'Dormir 22h',              time: '21:45', type: 'health' }
-        ];
+    <div class="baby-banner">
+        <span>🍼</span>
+        <span id="babyDays">Papai de primeira viagem!</span>
+    </div>
 
-        var temasSemana = {
-            0: { icon: '🌅', title: 'Família & Recarga',     color: '#28a745', checks: ['Presente com a família', 'Descanso de qualidade', 'Preparar semana mentalmente'] },
-            1: { icon: '💰', title: 'Financeiro — Mercado',  color: '#667eea', checks: ['Revisar DRE da semana', 'Checar fluxo de caixa', 'Analisar margem por categoria', 'Tomar 1 decisão financeira'] },
-            2: { icon: '📱', title: 'Marketing — Levels',    color: '#ff6b35', checks: ['Planejar conteúdo da semana', 'Analisar métricas', 'Revisar campanha ativa', 'Definir 1 ação de aquisição'] },
-            3: { icon: '⚙️', title: 'Operações & Processos', color: '#764ba2', checks: ['Revisar 1 processo que custa tempo', 'Delegar ou automatizar 1 tarefa', 'Checar estoque crítico', 'Revisar pedidos da Levels'] },
-            4: { icon: '🎓', title: 'Pós — Controladoria',  color: '#17a2b8', checks: ['Revisar conteúdo anterior', 'Ir à aula (19h)', 'Anotar insights aplicáveis', 'Registrar dúvidas'] },
-            5: { icon: '📈', title: 'Vendas & Crescimento',  color: '#e83e8c', checks: ['Analisar ticket médio', 'Contatar 2 clientes inativos', 'Revisar oferta/promoção', 'Pensar em upsell ou cross-sell'] },
-            6: { icon: '📚', title: 'Estudo & Revisão',      color: '#20c997', checks: ['1h — Revisão da aula de quinta', '1h — Leitura do livro', 'Anotar 3 insights aplicáveis', 'Revisão semanal: o que avancei?'] }
+    <div class="tema-banner" id="temaBanner">
+        <div class="tema-icon" id="temaIcon">📅</div>
+        <div>
+            <div class="tema-label">Foco de hoje</div>
+            <div class="tema-title" id="temaTitulo">Carregando...</div>
+        </div>
+    </div>
+
+    <div class="mit-box">
+        <div class="mit-label">🧠 MIT — Tarefa mais importante do dia</div>
+        <div id="mitContent"></div>
+    </div>
+
+    <div class="content">
+
+        <!-- ABA INÍCIO -->
+        <div id="tab-home" class="tab-content active">
+
+            <div class="quote-card" id="dailyQuote"></div>
+
+            <div class="section">
+                <div class="section-title">📊 Progresso do Dia</div>
+                <div class="progress-ring">
+                    <svg width="120" height="120">
+                        <circle class="progress-ring-circle" cx="60" cy="60" r="52"></circle>
+                        <circle class="progress-ring-progress" cx="60" cy="60" r="52"
+                            stroke-dasharray="326.7" stroke-dashoffset="326.7" id="progressCircle"></circle>
+                    </svg>
+                    <div class="progress-ring-text" id="progressText">0%</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">✅ Checklist do Dia</div>
+                <div id="tasksList"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">📅 Semana — Consistência</div>
+                <div class="week-grid" id="weekDays"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">🔄 Kaizen (+1% hoje)</div>
+                <label style="font-size:0.85em;font-weight:600;">Uma melhoria para amanhã:</label>
+                <input type="text" class="kaizen-input" id="kaizenInput" placeholder="Ex: Acordar sem snooze, delegar X tarefa...">
+                <button class="btn btn-success" onclick="saveKaizen()">💾 Salvar</button>
+            </div>
+        </div>
+
+        <!-- ABA FOCO -->
+        <div id="tab-agenda" class="tab-content">
+
+            <div class="section">
+                <div class="section-title">🎯 Tema do Dia — Checklist</div>
+                <div id="temaChecklist"></div>
+            </div>
+
+            <!-- BOLSA -->
+            <div class="section">
+                <div class="section-title">
+                    📈 Bolsa B3
+                    <span class="bolsa-badge" id="bolsaBadge">FECHADA</span>
+                </div>
+                <div class="bolsa-section">
+                    <div class="bolsa-title">Sessões desta semana (máx 3x)</div>
+                    <div class="bolsa-dias" id="bolsaDias"></div>
+                    <input type="text" class="bolsa-input" id="bolsaNota" placeholder="Oportunidade identificada / operação do dia...">
+                    <button class="btn btn-success" style="margin-top:4px;" onclick="saveBolsa()">💾 Registrar sessão</button>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">⏱️ Timer de Foco</div>
+                <div class="timer-wrap">
+                    <div class="timer-lbl" id="timerLabel">Foco — 25 min</div>
+                    <div class="timer-display" id="timerDisplay">25:00</div>
+                    <div class="timer-btns">
+                        <button class="btn-timer" onclick="setTimer(25,'Foco')">25 min</button>
+                        <button class="btn-timer" onclick="setTimer(50,'Deep Work')">50 min</button>
+                        <button class="btn-timer" onclick="setTimer(5,'Pausa')">Pausa 5</button>
+                    </div>
+                    <div class="timer-btns">
+                        <button class="btn-timer" id="timerStartBtn" onclick="toggleTimer()">▶ Iniciar</button>
+                        <button class="btn-timer" onclick="resetTimer()">↺ Reset</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">📅 Timeline do Dia</div>
+                <div id="timelineList"></div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">📈 Estatísticas</div>
+                <div class="stats-grid">
+                    <div class="stat-card"><div class="stat-number" id="statBooks">0</div><div class="stat-label">Livros</div></div>
+                    <div class="stat-card"><div class="stat-number" id="statWorkouts">0</div><div class="stat-label">Treinos</div></div>
+                    <div class="stat-card"><div class="stat-number" id="statBolsa">0</div><div class="stat-label">Sessões B3</div></div>
+                    <div class="stat-card"><div class="stat-number" id="statFocus">0</div><div class="stat-label">Deep Work</div></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ABA METAS -->
+        <div id="tab-goals" class="tab-content">
+            <div class="section">
+                <div class="section-title">🎯 Metas 2026 — Falconi</div>
+                <div id="goalsDetailed"></div>
+            </div>
+            <div class="section">
+                <div class="section-title">🔄 PDCA Semanal</div>
+                <div class="pdca-grid">
+                    <div class="pdca-item"><h4>P — Plan</h4><textarea id="pdcaPlan" placeholder="Metas desta semana..."></textarea></div>
+                    <div class="pdca-item"><h4>D — Do</h4><textarea id="pdcaDo" placeholder="O que executei..."></textarea></div>
+                    <div class="pdca-item"><h4>C — Check</h4><textarea id="pdcaCheck" placeholder="Resultados..."></textarea></div>
+                    <div class="pdca-item"><h4>A — Act</h4><textarea id="pdcaAct" placeholder="Ajustes..."></textarea></div>
+                </div>
+                <button class="btn btn-success" onclick="savePDCA()">💾 Salvar PDCA</button>
+            </div>
+        </div>
+
+        <!-- ABA REFLEXÃO -->
+        <div id="tab-reflection" class="tab-content">
+            <div class="section">
+                <div class="section-title">✍️ Resumo do Dia</div>
+                <label class="reflect-lbl">O que decidi hoje?</label>
+                <textarea class="reflect-ta" id="reflectDecisions" placeholder="Decisões tomadas..."></textarea>
+                <label class="reflect-lbl">O que evitei decidir?</label>
+                <textarea class="reflect-ta" id="reflectAvoided" placeholder="Procrastinações honestas..."></textarea>
+                <label class="reflect-lbl">O que aprendo para amanhã?</label>
+                <textarea class="reflect-ta" id="reflectLearn" placeholder="1 aprendizado aplicável..."></textarea>
+                <button class="btn btn-success" onclick="saveResume()">💾 Salvar Resumo</button>
+            </div>
+            <div class="section">
+                <div class="section-title">🙏 Exame Diário</div>
+                <label class="reflect-lbl">Servi hoje? (família, equipe, clientes)</label>
+                <textarea class="reflect-ta" id="reflectServe"></textarea>
+                <label class="reflect-lbl">3 Gratidões</label>
+                <textarea class="reflect-ta" id="reflectGratitude" placeholder="1. &#10;2. &#10;3. "></textarea>
+                <label class="reflect-lbl">Vivi com propósito?</label>
+                <textarea class="reflect-ta" id="reflectPurpose"></textarea>
+                <button class="btn btn-success" onclick="saveReflection()">💾 Salvar Reflexão</button>
+            </div>
+            <div class="section">
+                <div class="section-title">🧘 Controle Estoico</div>
+                <label class="reflect-lbl">Sob meu controle hoje:</label>
+                <textarea class="reflect-ta" id="stoicControl"></textarea>
+                <label class="reflect-lbl">Fora do meu controle (aceitei?):</label>
+                <textarea class="reflect-ta" id="stoicAccept"></textarea>
+                <button class="btn btn-success" onclick="saveStoic()">💾 Salvar</button>
+            </div>
+        </div>
+
+        <!-- ABA CONFIG -->
+        <div id="tab-config" class="tab-content">
+            <div class="section">
+                <div class="section-title">⚙️ Configurações</div>
+                <button class="btn" onclick="exportData()">📥 Exportar Dados</button>
+                <button class="btn btn-secondary" onclick="importData()">📤 Importar Dados</button>
+                <button class="btn btn-danger" onclick="resetWeek()">🔄 Resetar Semana</button>
+                <button class="btn btn-danger" onclick="resetAll()">⚠️ Resetar Tudo</button>
+            </div>
+            <div class="section">
+                <div class="section-title">📚 Sobre</div>
+                <p style="font-weight:700;margin-bottom:4px;">Bastião 2026 — v5.0</p>
+                <p style="font-size:0.82em;color:#777;line-height:1.7;">
+                    🔄 Kaizen · 📊 Falconi · 🙏 Jesus · 🧘 Estoicismo<br>
+                    🧠 Eat That Frog · ⚡ Deep Work · 🎯 Essentialism<br>
+                    🔗 Atomic Habits · 📈 Drucker · 📉 B3 integrada
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" id="nav-home">
+            <div class="nav-icon">🏠</div><div class="nav-label">Início</div>
+        </div>
+        <div class="nav-item" id="nav-agenda">
+            <div class="nav-icon">⚡</div><div class="nav-label">Foco</div>
+        </div>
+        <div class="nav-item" id="nav-goals">
+            <div class="nav-icon">🎯</div><div class="nav-label">Metas</div>
+        </div>
+        <div class="nav-item" id="nav-reflection">
+            <div class="nav-icon">✍️</div><div class="nav-label">Reflexão</div>
+        </div>
+        <div class="nav-item" id="nav-config">
+            <div class="nav-icon">⚙️</div><div class="nav-label">Config</div>
+        </div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+</div>
+
+<script>
+    // ── DADOS BASE ───────────────────────────────────────
+    // Rotina atualizada: manhãs Levels, tardes Mercado
+    // Treino: prioridade manhã 05h, plano B tarde 15:30
+    var dailyTasks = [
+        { id: 'treino-manha',  emoji: '🏋️', text: 'Treino musculação (manhã)',    time: '05:00', type: 'workout',  optional: false, tag: 'prioridade' },
+        { id: 'evangelho',     emoji: '📖', text: 'Evangelho + Provérbios',       time: '05:50', type: 'prayer',   optional: false, tag: '' },
+        { id: 'cafe',          emoji: '☕', text: 'Café com Bhrenda',             time: '06:20', type: 'family',   optional: false, tag: '' },
+        { id: 'leitura',       emoji: '📚', text: 'Leitura profunda (1h)',         time: '06:30', type: 'reading',  optional: false, tag: 'diferencial' },
+        { id: 'mit',           emoji: '🧠', text: 'MIT do dia — escreve no papel', time: '07:30', type: 'focus',    optional: false, tag: '' },
+        { id: 'levels',        emoji: '🥤', text: 'Levels Nutrition (manhã)',      time: '08:00', type: 'work',     optional: false, tag: '' },
+        { id: 'almoco',        emoji: '🍽️', text: 'Almoço — sem tela',           time: '12:00', type: 'health',   optional: false, tag: '' },
+        { id: 'mercado',       emoji: '🏢', text: 'Mercado Liderança (tarde)',     time: '13:00', type: 'work',     optional: false, tag: '' },
+        { id: 'treino-tarde',  emoji: '🏋️', text: 'Treino (plano B — se não foi às 5h)', time: '15:30', type: 'workout', optional: true, tag: 'plano B' },
+        { id: 'baby',          emoji: '🍼', text: 'Tempo com bebê + Bhrenda',     time: '19:00', type: 'family',   optional: false, tag: '' },
+        { id: 'jantar',        emoji: '👫', text: 'Jantar + oração em casal',     time: '19:30', type: 'family',   optional: false, tag: '' },
+        { id: 'resumo',        emoji: '✍️', text: 'Resumo do dia — 10 min',       time: '20:30', type: 'focus',    optional: false, tag: 'hábito chave' },
+        { id: 'leitura-leve',  emoji: '📖', text: 'Leitura leve (opcional)',       time: '20:45', type: 'reading',  optional: true,  tag: '' },
+        { id: 'sono',          emoji: '😴', text: 'Sono — 21:30',                time: '21:30', type: 'health',   optional: false, tag: '' }
+    ];
+
+    var temasSemana = {
+        0: { icon: '🌅', title: 'Família & Recarga',     color: '#28a745', checks: ['Presente com bebê e Bhrenda', 'Descanso real — zero decisão de negócio', 'Preparar semana mentalmente'] },
+        1: { icon: '💰', title: 'Financeiro — Mercado',  color: '#667eea', checks: ['DRE e fluxo de caixa', 'Margem por categoria', '1 decisão financeira pendente', 'Lucro Real: verificar obrigações'] },
+        2: { icon: '📱', title: 'Marketing — Levels',    color: '#ff6b35', checks: ['Planejar conteúdo da semana', 'Métricas Instagram/WhatsApp', 'Revisar campanha ativa', '1 ação de aquisição'] },
+        3: { icon: '⚙️', title: 'Operações & Processos', color: '#764ba2', checks: ['1 processo que custa tempo → delegar', 'Estoque crítico Mercado', 'Pedidos Levels', 'iFood: performance da semana'] },
+        4: { icon: '🎓', title: 'Pós — Controladoria',  color: '#17a2b8', checks: ['Revisar conteúdo anterior', 'Aula às 19h — conectar com negócios', 'Anotar insights aplicáveis'] },
+        5: { icon: '📈', title: 'Vendas & Crescimento',  color: '#e83e8c', checks: ['Ticket médio e conversão da semana', '2 clientes inativos (Levels)', 'Promoção ativa?', 'Upsell ou cross-sell'] },
+        6: { icon: '📚', title: 'Estudo & Revisão',      color: '#20c997', checks: ['1h Revisão da aula de quinta', '1h Leitura do livro da semana', '3 insights aplicáveis nos negócios', 'Revisão semanal: avancei? evitei?'] }
+    };
+
+    // Metas com proporcionalidade para os 2 meses restantes (nov-dez 2026)
+    var goals2026 = [
+        { title: '💼 Faturamento 2026: R$ 7,0M', current: 5800000, target: 7000000, key: 'revenue', fmt: 'money' },
+        { title: '🏪 Unidades Operacionais',      current: 2,       target: 4,       key: 'units',   fmt: 'num' },
+        { title: '🥤 Levels — Faturamento Nov/Dez', current: 0,     target: 80000,   key: 'levels',  fmt: 'money' },
+        { title: '📊 Margem Líquida (%)',         current: 10,      target: 15,      key: 'margin',  fmt: 'pct' },
+        { title: '📚 Livros Lidos 2026',          current: 36,      target: 52,      key: 'books',   fmt: 'num' },
+        { title: '🏋️ Treinos Nov/Dez (meta 24x)', current: 0,      target: 24,      key: 'gym',     fmt: 'num' }
+    ];
+
+    var quotes = [
+        { text: "A disciplina é a ponte entre metas e conquistas.", author: "Jim Rohn" },
+        { text: "O obstáculo é o caminho.", author: "Marco Aurélio" },
+        { text: "Você não sobe ao nível dos seus objetivos. Cai ao nível dos seus sistemas.", author: "James Clear" },
+        { text: "Quem não mede, não gerencia.", author: "Vicente Falconi" },
+        { text: "Coma o sapo primeiro — o resto do dia só melhora.", author: "Brian Tracy" },
+        { text: "Ser pai é a maior startup que você vai liderar.", author: "Bastião 2026" },
+        { text: "O essencial é dizer não para quase tudo.", author: "Greg McKeown" },
+        { text: "Pequenas melhorias diárias levam a resultados surpreendentes.", author: "Kaizen" },
+        { text: "Trabalho profundo é raro, valioso e significativo.", author: "Cal Newport" },
+        { text: "Não vim para ser servido, mas para servir.", author: "Jesus Cristo" },
+        { text: "Kipchoge não negocia com o alarme.", author: "Bastião 2026" }
+    ];
+
+    // ── ESTADO ───────────────────────────────────────────
+    var currentData = null;
+    var timerInterval = null;
+    var timerSeconds = 25 * 60;
+    var timerRunning = false;
+    var timerDuration = 25 * 60;
+    var BABY_BIRTH = new Date('2026-10-01'); // Ajuste conforme data real
+
+    // ── STORAGE ──────────────────────────────────────────
+    async function loadData() {
+        try {
+            var r = await window.storage.get('bastiao-v5', false);
+            if (r) return JSON.parse(r.value);
+        } catch(e) {}
+        return {
+            tasks: dailyTasks.map(function(t) { return Object.assign({}, t, { completed: false }); }),
+            stats: { books: 36, workouts: 0, bolsa: 0, focus: 0 },
+            week: [false,false,false,false,false,false,false],
+            goals: goals2026,
+            mit: { text: '', done: false, date: '' },
+            temaChecks: {},
+            bolsaSemana: [false,false,false,false,false],
+            bolsaNotas: [],
+            kaizen: [],
+            pdca: { plan:'', do:'', check:'', act:'' },
+            resume: { decisions:'', avoided:'', learn:'' },
+            reflection: { serve:'', gratitude:'', purpose:'' },
+            stoic: { control:'', accept:'' }
         };
+    }
 
-        var goals2026 = [
-            { title: '💼 Faturamento 2026: R$ 7,0M', current: 4100000, target: 7000000, key: 'revenue' },
-            { title: '🏪 Unidades Operacionais',      current: 3,       target: 4,       key: 'units' },
-            { title: '🏷️ Marca Própria Levels',       current: 0,       target: 400000,  key: 'brand' },
-            { title: '📊 Margem Líquida (%)',         current: 10,      target: 15,      key: 'margin' },
-            { title: '⏱️ Horas Trabalho/Semana',      current: 60,      target: 40,      key: 'worktime', reverse: true },
-            { title: '📚 Livros Lidos',               current: 0,       target: 52,      key: 'books' }
-        ];
-        
-        var quotes = [
-            { text: "O obstáculo é o caminho.", author: "Marco Aurélio" },
-            { text: "Pequenas melhorias diárias levam a resultados surpreendentes.", author: "Kaizen" },
-            { text: "Quem não mede, não gerencia.", author: "Vicente Falconi" },
-            { text: "Não vim para ser servido, mas para servir.", author: "Jesus Cristo" },
-            { text: "Você tem poder sobre sua mente, não sobre eventos externos.", author: "Marco Aurélio" },
-            { text: "Coma o sapo primeiro — o resto do dia só melhora.", author: "Brian Tracy" },
-            { text: "Você não sobe ao nível de seus objetivos. Cai ao nível dos seus sistemas.", author: "James Clear" },
-            { text: "O essencial é dizer não para quase tudo.", author: "Greg McKeown" },
-            { text: "Trabalho profundo é raro, valioso e significativo.", author: "Cal Newport" },
-            { text: "O que não pode ser medido não pode ser melhorado.", author: "Peter Drucker" }
-        ];
-        
-        var currentData = null;
-        var timerInterval = null;
-        var timerSeconds = 25 * 60;
-        var timerRunning = false;
-        var timerDuration = 25 * 60;
+    async function saveData() {
+        try { await window.storage.set('bastiao-v5', JSON.stringify(currentData), false); } catch(e) {}
+    }
 
-        // ── STORAGE ──────────────────────────────────────
-        async function loadData() {
-            try {
-                var result = await window.storage.get('diego-data-v4', false);
-                if (result) return JSON.parse(result.value);
-            } catch (e) {}
-            return {
-                tasks: dailyTasks.map(function(t) { return Object.assign({}, t, { completed: false }); }),
-                stats: { books: 0, workouts: 0, prayer: 0, focus: 0 },
-                week: [false,false,false,false,false,false,false],
-                goals: goals2026,
-                mit: { text: '', done: false, date: '' },
-                temaChecks: {},
-                kaizen: [],
-                pdca: { plan: '', do: '', check: '', act: '' },
-                reflection: {},
-                stoic: {}
-            };
+    // ── NAVEGAÇÃO ────────────────────────────────────────
+    function switchTab(tab) {
+        var tabs = document.querySelectorAll('.tab-content');
+        for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
+        var navs = document.querySelectorAll('.nav-item');
+        for (var i = 0; i < navs.length; i++) navs[i].classList.remove('active');
+        document.getElementById('tab-' + tab).classList.add('active');
+        document.getElementById('nav-' + tab).classList.add('active');
+        if (tab === 'agenda') { renderTimeline(); renderTemaChecklist(); renderBolsa(); }
+        if (tab === 'goals')  renderGoals();
+    }
+
+    // ── BABY BANNER ──────────────────────────────────────
+    function renderBabyBanner() {
+        var now = new Date();
+        var dias = Math.floor((now - BABY_BIRTH) / (1000 * 60 * 60 * 24));
+        if (dias >= 0) {
+            document.getElementById('babyDays').textContent = '🍼 ' + dias + ' dias de papai! Aproveite cada momento.';
         }
-        
-        async function saveData() {
-            try {
-                await window.storage.set('diego-data-v4', JSON.stringify(currentData), false);
-            } catch (e) {}
+    }
+
+    // ── TEMA ─────────────────────────────────────────────
+    function getTema() { return temasSemana[new Date().getDay()]; }
+
+    function renderTemaBanner() {
+        var t = getTema();
+        document.getElementById('temaIcon').textContent = t.icon;
+        document.getElementById('temaTitulo').textContent = t.title;
+        document.getElementById('temaBanner').style.borderLeftColor = t.color;
+    }
+
+    function renderTemaChecklist() {
+        var t = getTema();
+        var key = new Date().toDateString();
+        if (!currentData.temaChecks) currentData.temaChecks = {};
+        if (!currentData.temaChecks[key]) currentData.temaChecks[key] = {};
+        var checks = currentData.temaChecks[key];
+        var html = '';
+        for (var i = 0; i < t.checks.length; i++) {
+            var done = checks[i] ? true : false;
+            html += '<div class="tema-check-item ' + (done ? 'done' : '') + '" onclick="toggleTemaCheck(' + i + ')">' +
+                '<div class="check-circle">' + (done ? '✓' : '') + '</div>' +
+                '<span>' + t.checks[i] + '</span></div>';
         }
+        document.getElementById('temaChecklist').innerHTML = html;
+    }
 
-        // ── NAVEGAÇÃO ────────────────────────────────────
-        function switchTab(tab) {
-            var tabs = document.querySelectorAll('.tab-content');
-            for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
-            var navs = document.querySelectorAll('.nav-item');
-            for (var i = 0; i < navs.length; i++) navs[i].classList.remove('active');
-            document.getElementById('tab-' + tab).classList.add('active');
-            document.getElementById('nav-' + tab).classList.add('active');
-            if (tab === 'agenda') { renderTimeline(); renderTemaChecklist(); }
-            if (tab === 'goals')  renderGoalsDetailed();
-        }
+    async function toggleTemaCheck(i) {
+        var key = new Date().toDateString();
+        if (!currentData.temaChecks) currentData.temaChecks = {};
+        if (!currentData.temaChecks[key]) currentData.temaChecks[key] = {};
+        currentData.temaChecks[key][i] = !currentData.temaChecks[key][i];
+        await saveData();
+        renderTemaChecklist();
+    }
 
-        // ── TEMA ─────────────────────────────────────────
-        function getTema() { return temasSemana[new Date().getDay()]; }
-
-        function renderTemaBanner() {
-            var t = getTema();
-            document.getElementById('temaIcon').textContent = t.icon;
-            document.getElementById('temaTitulo').textContent = t.title;
-            document.getElementById('temaBanner').style.borderLeftColor = t.color;
-        }
-
-        function renderTemaChecklist() {
-            var t = getTema();
-            var key = new Date().toDateString();
-            if (!currentData.temaChecks) currentData.temaChecks = {};
-            if (!currentData.temaChecks[key]) currentData.temaChecks[key] = {};
-            var checks = currentData.temaChecks[key];
-            var html = '';
-            for (var i = 0; i < t.checks.length; i++) {
-                var done = checks[i] ? true : false;
-                html += '<div class="tema-check-item ' + (done ? 'done' : '') + '" onclick="toggleTemaCheck(' + i + ')">' +
-                    '<div class="check-circle">' + (done ? '✓' : '') + '</div>' +
-                    '<span>' + t.checks[i] + '</span></div>';
+    // ── MIT ──────────────────────────────────────────────
+    function renderMIT() {
+        var mit = currentData.mit || { text:'', done:false, date:'' };
+        var today = new Date().toDateString();
+        var has = (mit.date === today && mit.text);
+        var html = '';
+        if (has) {
+            html += '<div class="mit-saved">' + (mit.done ? '✅ ' : '⏳ ') + mit.text + '</div>';
+            if (!mit.done) {
+                html += '<button class="mit-btn mit-btn-green" onclick="completeMIT()">✅ Concluído!</button>';
+            } else {
+                html += '<span style="font-size:0.82em;font-weight:700;color:#333;">🔥 MIT do dia concluído!</span>';
             }
-            document.getElementById('temaChecklist').innerHTML = html;
+            html += ' <button class="mit-btn mit-btn-ghost" onclick="editMIT()">Editar</button>';
+        } else {
+            html += '<input type="text" class="mit-input" id="mitInput" placeholder="Qual a tarefa mais importante hoje?">';
+            html += '<button class="mit-btn" onclick="saveMIT()">Definir MIT</button>';
         }
+        document.getElementById('mitContent').innerHTML = html;
+    }
 
-        async function toggleTemaCheck(i) {
-            var key = new Date().toDateString();
-            if (!currentData.temaChecks) currentData.temaChecks = {};
-            if (!currentData.temaChecks[key]) currentData.temaChecks[key] = {};
-            currentData.temaChecks[key][i] = !currentData.temaChecks[key][i];
-            await saveData();
-            renderTemaChecklist();
+    async function saveMIT() {
+        var el = document.getElementById('mitInput');
+        if (!el || !el.value.trim()) return;
+        currentData.mit = { text: el.value.trim(), done: false, date: new Date().toDateString() };
+        await saveData();
+        renderMIT();
+        showToast('🧠 MIT definido! Execute.');
+    }
+
+    async function completeMIT() {
+        currentData.mit.done = true;
+        currentData.stats.focus++;
+        await saveData();
+        renderMIT();
+        renderStats();
+        showToast('🔥 MIT concluído! Dia vencido.');
+    }
+
+    function editMIT() { currentData.mit.date = ''; renderMIT(); }
+
+    // ── TASKS ────────────────────────────────────────────
+    function renderTasks() {
+        var html = '';
+        for (var i = 0; i < currentData.tasks.length; i++) {
+            var t = currentData.tasks[i];
+            var extra = t.optional ? ' optional' : '';
+            if (t.id === 'treino-manha' || t.id === 'treino-tarde') extra += '';
+            var tagHtml = '';
+            if (t.tag) {
+                var tc = (t.tag === 'plano B') ? ' green' : '';
+                tagHtml = '<span class="task-tag' + tc + '">' + t.tag + '</span>';
+            }
+            html += '<div class="task-item' + extra + (t.completed ? ' completed' : '') + '" onclick="toggleTask(' + i + ')">' +
+                '<div class="task-checkbox">' + (t.completed ? '✓' : '') + '</div>' +
+                '<div class="task-emoji">' + t.emoji + '</div>' +
+                '<div class="task-content">' +
+                    '<div class="task-text">' + t.text + tagHtml + '</div>' +
+                    '<div class="task-time">' + t.time + (t.optional ? ' · opcional' : '') + '</div>' +
+                '</div></div>';
         }
+        document.getElementById('tasksList').innerHTML = html;
+        updateProgress();
+    }
 
-        // ── MIT ──────────────────────────────────────────
-        function renderMIT() {
-            var mit = currentData.mit || { text: '', done: false, date: '' };
-            var today = new Date().toDateString();
-            var hasMIT = (mit.date === today && mit.text);
-            var html = '';
-            if (hasMIT) {
-                html += '<div class="mit-saved-text">' + (mit.done ? '✅ ' : '⏳ ') + mit.text + '</div>';
-                if (!mit.done) {
-                    html += '<button class="mit-btn mit-btn-green" onclick="completeMIT()">✅ Concluído!</button>';
-                } else {
-                    html += '<span style="font-size:0.85em;font-weight:700;color:#333;">🔥 MIT concluído hoje!</span>';
+    function updateProgress() {
+        var mandatory = currentData.tasks.filter(function(t) { return !t.optional; });
+        var done = mandatory.filter(function(t) { return t.completed; }).length;
+        var total = mandatory.length;
+        var pct = Math.round((done / total) * 100);
+        document.getElementById('progressText').textContent = pct + '%';
+        var offset = 326.7 - (pct / 100) * 326.7;
+        document.getElementById('progressCircle').style.strokeDashoffset = offset;
+    }
+
+    async function toggleTask(i) {
+        currentData.tasks[i].completed = !currentData.tasks[i].completed;
+        if (currentData.tasks[i].completed) {
+            var t = currentData.tasks[i];
+            // Se marcou treino manhã, desmarca plano B e vice-versa
+            if (t.id === 'treino-manha') {
+                for (var j = 0; j < currentData.tasks.length; j++) {
+                    if (currentData.tasks[j].id === 'treino-tarde') currentData.tasks[j].completed = false;
                 }
-                html += ' <button class="mit-btn mit-btn-ghost" onclick="editMIT()">Editar</button>';
-            } else {
-                html += '<input type="text" class="mit-input" id="mitInput" placeholder="Qual a tarefa mais importante hoje?">';
-                html += '<button class="mit-btn" onclick="saveMIT()">Definir MIT</button>';
+                currentData.stats.workouts++;
             }
-            document.getElementById('mitContent').innerHTML = html;
+            if (t.id === 'treino-tarde' && !wasMorningDone()) {
+                currentData.stats.workouts++;
+            }
+            if (t.type === 'reading') currentData.stats.books = parseFloat((currentData.stats.books + 0.14).toFixed(2));
+        } else {
+            var t = currentData.tasks[i];
+            if (t.id === 'treino-manha' || t.id === 'treino-tarde') {
+                if (currentData.stats.workouts > 0) currentData.stats.workouts--;
+            }
+        }
+        await saveData();
+        renderTasks();
+        renderStats();
+    }
+
+    function wasMorningDone() {
+        for (var i = 0; i < currentData.tasks.length; i++) {
+            if (currentData.tasks[i].id === 'treino-manha' && currentData.tasks[i].completed) return true;
+        }
+        return false;
+    }
+
+    // ── SEMANA ───────────────────────────────────────────
+    function renderWeek() {
+        var days = ['D','S','T','Q','Q','S','S'];
+        var html = '';
+        for (var i = 0; i < 7; i++) {
+            var done = currentData.week[i];
+            html += '<div class="day-badge ' + (done ? 'completed' : '') + '" onclick="toggleDay(' + i + ')">' +
+                '<div>' + days[i] + '</div><div>' + (done ? '✅' : '⭕') + '</div></div>';
+        }
+        document.getElementById('weekDays').innerHTML = html;
+        var streak = 0;
+        for (var i = 0; i < 7; i++) { if (currentData.week[i]) streak++; }
+        document.getElementById('streakBadge').textContent = '🔥 ' + streak + ' dias';
+    }
+
+    async function toggleDay(i) {
+        currentData.week[i] = !currentData.week[i];
+        await saveData();
+        renderWeek();
+    }
+
+    // ── STATS ────────────────────────────────────────────
+    function renderStats() {
+        document.getElementById('statBooks').textContent = parseFloat(currentData.stats.books).toFixed(1);
+        document.getElementById('statWorkouts').textContent = currentData.stats.workouts;
+        document.getElementById('statBolsa').textContent = currentData.stats.bolsa;
+        document.getElementById('statFocus').textContent = currentData.stats.focus;
+    }
+
+    // ── BOLSA ────────────────────────────────────────────
+    function renderBolsa() {
+        // Badge: B3 abre 9h-17h em dias úteis
+        var now = new Date();
+        var h = now.getHours(); var d = now.getDay();
+        var aberta = (d >= 1 && d <= 5 && h >= 9 && h < 17);
+        var badge = document.getElementById('bolsaBadge');
+        if (aberta) {
+            badge.textContent = 'ABERTA'; badge.className = 'bolsa-badge';
+        } else {
+            badge.textContent = 'FECHADA'; badge.className = 'bolsa-badge off';
         }
 
-        async function saveMIT() {
-            var el = document.getElementById('mitInput');
-            if (!el || !el.value.trim()) return;
-            currentData.mit = { text: el.value.trim(), done: false, date: new Date().toDateString() };
-            await saveData();
-            renderMIT();
-            showToast('🧠 MIT definido! Agora execute.');
+        // Dias da semana para sessões (seg a sex)
+        var dLabels = ['Seg','Ter','Qua','Qui','Sex'];
+        var html = '';
+        for (var i = 0; i < 5; i++) {
+            var ativo = currentData.bolsaSemana[i] ? ' ativo' : '';
+            html += '<div class="bolsa-dia' + ativo + '" onclick="toggleBolsaDia(' + i + ')">' + dLabels[i] + (currentData.bolsaSemana[i] ? '<br>✅' : '') + '</div>';
         }
+        document.getElementById('bolsaDias').innerHTML = html;
+    }
 
-        async function completeMIT() {
-            currentData.mit.done = true;
-            currentData.stats.focus++;
+    async function toggleBolsaDia(i) {
+        // Máx 3 sessões por semana
+        var count = currentData.bolsaSemana.filter(Boolean).length;
+        if (!currentData.bolsaSemana[i] && count >= 3) {
+            showToast('⚠️ Máx 3 sessões/semana. Disciplina!'); return;
+        }
+        currentData.bolsaSemana[i] = !currentData.bolsaSemana[i];
+        await saveData();
+        renderBolsa();
+    }
+
+    async function saveBolsa() {
+        var nota = document.getElementById('bolsaNota').value.trim();
+        if (nota) {
+            if (!currentData.bolsaNotas) currentData.bolsaNotas = [];
+            currentData.bolsaNotas.push({ date: new Date().toISOString(), text: nota });
+            currentData.stats.bolsa++;
             await saveData();
-            renderMIT();
+            document.getElementById('bolsaNota').value = '';
             renderStats();
-            showToast('🔥 MIT concluído! Dia vencido.');
+            showToast('📈 Sessão registrada!');
         }
+    }
 
-        function editMIT() {
-            currentData.mit.date = '';
-            renderMIT();
-        }
+    // ── TIMER ────────────────────────────────────────────
+    function setTimer(min, lbl) {
+        resetTimer();
+        timerDuration = min * 60;
+        timerSeconds = timerDuration;
+        document.getElementById('timerLabel').textContent = lbl + ' — ' + min + ' min';
+        document.getElementById('timerDisplay').textContent = fmt(timerSeconds);
+    }
 
-        // ── TAREFAS ──────────────────────────────────────
-        function renderTasks() {
-            var html = '';
-            for (var i = 0; i < currentData.tasks.length; i++) {
-                var t = currentData.tasks[i];
-                html += '<div class="task-item ' + (t.completed ? 'completed' : '') + '" onclick="toggleTask(' + i + ')">' +
-                    '<div class="task-checkbox">' + (t.completed ? '✓' : '') + '</div>' +
-                    '<div class="task-emoji">' + t.emoji + '</div>' +
-                    '<div class="task-content">' +
-                        '<div class="task-text">' + t.text + '</div>' +
-                        '<div class="task-time">' + t.time + '</div>' +
-                    '</div></div>';
-            }
-            document.getElementById('tasksList').innerHTML = html;
-            updateProgress();
-        }
-        
-        function updateProgress() {
-            var completed = 0;
-            for (var i = 0; i < currentData.tasks.length; i++) {
-                if (currentData.tasks[i].completed) completed++;
-            }
-            var total = currentData.tasks.length;
-            var percent = Math.round((completed / total) * 100);
-            document.getElementById('progressText').textContent = percent + '%';
-            var offset = 345.4 - (percent / 100) * 345.4;
-            document.getElementById('progressCircle').style.strokeDashoffset = offset;
-        }
-        
-        async function toggleTask(i) {
-            currentData.tasks[i].completed = !currentData.tasks[i].completed;
-            if (currentData.tasks[i].completed) {
-                var t = currentData.tasks[i];
-                if (t.type === 'workout') currentData.stats.workouts++;
-                if (t.type === 'prayer')  currentData.stats.prayer++;
-                if (t.type === 'reading') currentData.stats.books = parseFloat((currentData.stats.books + 0.14).toFixed(2));
-            }
-            await saveData();
-            renderTasks();
-            renderStats();
-        }
-
-        // ── SEMANA ───────────────────────────────────────
-        function renderWeek() {
-            var days = ['D','S','T','Q','Q','S','S'];
-            var html = '';
-            for (var i = 0; i < currentData.week.length; i++) {
-                var done = currentData.week[i];
-                html += '<div class="day-badge ' + (done ? 'completed' : '') + '" onclick="toggleDay(' + i + ')">' +
-                    '<div>' + days[i] + '</div><div>' + (done ? '✅' : '⭕') + '</div></div>';
-            }
-            document.getElementById('weekDays').innerHTML = html;
-            var streak = 0;
-            for (var i = 0; i < currentData.week.length; i++) { if (currentData.week[i]) streak++; }
-            document.getElementById('streakBadge').textContent = '🔥 ' + streak + ' dias';
-        }
-        
-        async function toggleDay(i) {
-            currentData.week[i] = !currentData.week[i];
-            await saveData();
-            renderWeek();
-        }
-
-        // ── STATS ────────────────────────────────────────
-        function renderStats() {
-            document.getElementById('statBooks').textContent    = parseFloat(currentData.stats.books).toFixed(1);
-            document.getElementById('statWorkouts').textContent = currentData.stats.workouts;
-            document.getElementById('statPrayer').textContent   = currentData.stats.prayer;
-            document.getElementById('statFocus').textContent    = currentData.stats.focus;
-        }
-
-        // ── TIMER ────────────────────────────────────────
-        function setTimer(minutes, label) {
-            resetTimer();
-            timerDuration = minutes * 60;
-            timerSeconds  = timerDuration;
-            document.getElementById('timerLabel').textContent   = label + ' — ' + minutes + ' min';
-            document.getElementById('timerDisplay').textContent = formatTime(timerSeconds);
-        }
-
-        function toggleTimer() {
-            if (timerRunning) {
-                clearInterval(timerInterval);
-                timerRunning = false;
-                document.getElementById('timerStartBtn').textContent = '▶ Continuar';
-                document.getElementById('timerStartBtn').classList.remove('active');
-            } else {
-                timerRunning = true;
-                document.getElementById('timerStartBtn').textContent = '⏸ Pausar';
-                document.getElementById('timerStartBtn').classList.add('active');
-                timerInterval = setInterval(function() {
-                    timerSeconds--;
-                    document.getElementById('timerDisplay').textContent = formatTime(timerSeconds);
-                    if (timerSeconds <= 0) {
-                        clearInterval(timerInterval);
-                        timerRunning = false;
-                        document.getElementById('timerStartBtn').textContent = '▶ Iniciar';
-                        document.getElementById('timerStartBtn').classList.remove('active');
-                        currentData.stats.focus++;
-                        saveData();
-                        renderStats();
-                        showToast('⚡ Sessão de foco concluída!');
-                    }
-                }, 1000);
-            }
-        }
-
-        function resetTimer() {
+    function toggleTimer() {
+        if (timerRunning) {
             clearInterval(timerInterval);
             timerRunning = false;
-            timerSeconds = timerDuration;
-            document.getElementById('timerDisplay').textContent = formatTime(timerSeconds);
-            document.getElementById('timerStartBtn').textContent = '▶ Iniciar';
+            document.getElementById('timerStartBtn').textContent = '▶ Continuar';
             document.getElementById('timerStartBtn').classList.remove('active');
+        } else {
+            timerRunning = true;
+            document.getElementById('timerStartBtn').textContent = '⏸ Pausar';
+            document.getElementById('timerStartBtn').classList.add('active');
+            timerInterval = setInterval(function() {
+                timerSeconds--;
+                document.getElementById('timerDisplay').textContent = fmt(timerSeconds);
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval); timerRunning = false;
+                    document.getElementById('timerStartBtn').textContent = '▶ Iniciar';
+                    document.getElementById('timerStartBtn').classList.remove('active');
+                    currentData.stats.focus++;
+                    saveData(); renderStats();
+                    showToast('⚡ Sessão concluída!');
+                }
+            }, 1000);
         }
+    }
 
-        function formatTime(s) {
-            var m = Math.floor(s / 60);
-            var sec = s % 60;
-            return (m < 10 ? '0' : '') + m + ':' + (sec < 10 ? '0' : '') + sec;
-        }
+    function resetTimer() {
+        clearInterval(timerInterval); timerRunning = false;
+        timerSeconds = timerDuration;
+        document.getElementById('timerDisplay').textContent = fmt(timerSeconds);
+        document.getElementById('timerStartBtn').textContent = '▶ Iniciar';
+        document.getElementById('timerStartBtn').classList.remove('active');
+    }
 
-        // ── TIMELINE ─────────────────────────────────────
-        function renderTimeline() {
-            var now = new Date();
-            var cur = now.getHours() * 60 + now.getMinutes();
-            var html = '';
-            for (var i = 0; i < currentData.tasks.length; i++) {
-                var t = currentData.tasks[i];
-                var parts = t.time.split(':');
-                var tm = parseInt(parts[0]) * 60 + parseInt(parts[1]);
-                var next = tm > cur && tm <= cur + 60;
-                html += '<div class="timeline-item ' + (next ? 'next' : '') + ' ' + (t.completed ? 'done' : '') + '">' +
-                    '<div style="display:flex;justify-content:space-between;align-items:center;">' +
-                        '<div><strong>' + t.emoji + ' ' + t.text + '</strong>' +
-                        '<div style="font-size:0.8em;color:#666;margin-top:2px;">' + t.time + '</div></div>' +
-                        '<div>' + (t.completed ? '✅' : next ? '⏰' : '⭕') + '</div>' +
-                    '</div></div>';
-            }
-            document.getElementById('timelineList').innerHTML = html;
-        }
+    function fmt(s) {
+        var m = Math.floor(s/60); var sec = s%60;
+        return (m<10?'0':'')+m+':'+(sec<10?'0':'')+sec;
+    }
 
-        // ── METAS ────────────────────────────────────────
-        function renderGoalsDetailed() {
-            var html = '';
-            for (var i = 0; i < currentData.goals.length; i++) {
-                var g = currentData.goals[i];
-                var pct = g.reverse
-                    ? Math.round((1 - (g.current - g.target) / (60 - g.target)) * 100)
-                    : Math.round((g.current / g.target) * 100);
-                if (pct < 0) pct = 0;
-                if (pct > 100) pct = 100;
-                var fmt = function(v) { return (typeof v === 'number' && v >= 100000) ? 'R$ ' + (v/1000000).toFixed(1) + 'M' : v; };
-                html += '<div class="goal-card">' +
-                    '<div class="goal-title">' + g.title + '</div>' +
-                    '<div class="goal-progress-bar"><div class="goal-progress-fill" style="width:' + pct + '%">' + pct + '%</div></div>' +
-                    '<div style="display:flex;justify-content:space-between;font-size:0.85em;color:#666;margin-top:6px;">' +
-                        '<span>Atual: ' + fmt(g.current) + '</span><span>Meta: ' + fmt(g.target) + '</span></div>' +
-                    '<input type="number" placeholder="Novo valor" id="goal-' + i + '" ' +
-                        'style="width:100%;padding:8px;margin-top:10px;border-radius:8px;border:2px solid #e9ecef;font-family:inherit;">' +
-                    '<button class="btn btn-success" onclick="updateGoal(' + i + ')">Atualizar</button></div>';
-            }
-            document.getElementById('goalsDetailed').innerHTML = html;
+    // ── TIMELINE ─────────────────────────────────────────
+    function renderTimeline() {
+        var now = new Date();
+        var cur = now.getHours() * 60 + now.getMinutes();
+        var html = '';
+        for (var i = 0; i < currentData.tasks.length; i++) {
+            var t = currentData.tasks[i];
+            var parts = t.time.split(':');
+            var tm = parseInt(parts[0]) * 60 + parseInt(parts[1]);
+            var next = tm > cur && tm <= cur + 60;
+            html += '<div class="timeline-item ' + (next ? 'next' : '') + ' ' + (t.completed ? 'done' : '') + '">' +
+                '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+                    '<div><strong>' + t.emoji + ' ' + t.text + '</strong><div style="font-size:0.78em;color:#888;margin-top:2px;">' + t.time + (t.optional?' · opcional':'') + '</div></div>' +
+                    '<div>' + (t.completed ? '✅' : next ? '⏰' : '⭕') + '</div>' +
+                '</div></div>';
         }
-        
-        async function updateGoal(i) {
-            var val = document.getElementById('goal-' + i).value;
-            if (val) {
-                currentData.goals[i].current = parseFloat(val);
-                await saveData();
-                renderGoalsDetailed();
-                showToast('✅ Meta atualizada!');
-            }
-        }
+        document.getElementById('timelineList').innerHTML = html;
+    }
 
-        // ── KAIZEN ───────────────────────────────────────
-        async function saveKaizen() {
-            var el = document.getElementById('kaizenInput');
-            var val = el.value.trim();
-            if (val) {
-                if (!currentData.kaizen) currentData.kaizen = [];
-                currentData.kaizen.push({ date: new Date().toISOString(), text: val });
-                await saveData();
-                el.value = '';
-                showToast('✅ Kaizen salvo! +1% hoje.');
-            }
-        }
-
-        // ── PDCA ─────────────────────────────────────────
-        async function savePDCA() {
-            currentData.pdca = {
-                plan:  document.getElementById('pdcaPlan').value,
-                do:    document.getElementById('pdcaDo').value,
-                check: document.getElementById('pdcaCheck').value,
-                act:   document.getElementById('pdcaAct').value
+    // ── METAS ────────────────────────────────────────────
+    function renderGoals() {
+        var html = '';
+        for (var i = 0; i < currentData.goals.length; i++) {
+            var g = currentData.goals[i];
+            var pct = Math.round((g.current / g.target) * 100);
+            if (pct < 0) pct = 0; if (pct > 100) pct = 100;
+            var fmtVal = function(v, type) {
+                if (type === 'money') return 'R$ ' + (v >= 1000000 ? (v/1000000).toFixed(1)+'M' : (v/1000).toFixed(0)+'K');
+                if (type === 'pct') return v + '%';
+                return v;
             };
+            html += '<div class="goal-card">' +
+                '<div class="goal-title">' + g.title + '</div>' +
+                '<div class="goal-bar"><div class="goal-fill" style="width:' + pct + '%">' + pct + '%</div></div>' +
+                '<div class="goal-nums"><span>Atual: ' + fmtVal(g.current, g.fmt) + '</span><span>Meta: ' + fmtVal(g.target, g.fmt) + '</span></div>' +
+                '<input type="number" class="goal-input" placeholder="Novo valor" id="goal-' + i + '">' +
+                '<button class="btn btn-success" onclick="updateGoal(' + i + ')">Atualizar</button></div>';
+        }
+        document.getElementById('goalsDetailed').innerHTML = html;
+    }
+
+    async function updateGoal(i) {
+        var v = document.getElementById('goal-' + i).value;
+        if (v) { currentData.goals[i].current = parseFloat(v); await saveData(); renderGoals(); showToast('✅ Meta atualizada!'); }
+    }
+
+    // ── KAIZEN ───────────────────────────────────────────
+    async function saveKaizen() {
+        var v = document.getElementById('kaizenInput').value.trim();
+        if (v) {
+            if (!currentData.kaizen) currentData.kaizen = [];
+            currentData.kaizen.push({ date: new Date().toISOString(), text: v });
             await saveData();
-            showToast('✅ PDCA salvo!');
+            document.getElementById('kaizenInput').value = '';
+            showToast('✅ Kaizen salvo! +1% hoje.');
         }
+    }
 
-        // ── REFLEXÃO ─────────────────────────────────────
-        async function saveReflection() {
-            currentData.reflection = {
-                serve:     document.getElementById('reflectServe').value,
-                humble:    document.getElementById('reflectHumble').value,
-                gratitude: document.getElementById('reflectGratitude').value,
-                purpose:   document.getElementById('reflectPurpose').value
-            };
-            await saveData();
-            showToast('✅ Reflexão salva!');
-        }
-        
-        async function saveStoic() {
-            currentData.stoic = {
-                control: document.getElementById('stoicControl').value,
-                accept:  document.getElementById('stoicAccept').value,
-                virtue:  document.getElementById('stoicVirtue').value
-            };
-            await saveData();
-            showToast('✅ Reflexão estoica salva!');
-        }
-
-        // ── EXPORT / IMPORT ──────────────────────────────
-        function exportData() {
-            var blob = new Blob([JSON.stringify(currentData, null, 2)], { type: 'application/json' });
-            var a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'diego-backup-' + new Date().toISOString().split('T')[0] + '.json';
-            a.click();
-            showToast('✅ Dados exportados!');
-        }
-        
-        function importData() {
-            var input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            input.onchange = async function(e) {
-                var text = await e.target.files[0].text();
-                currentData = JSON.parse(text);
-                await saveData();
-                init();
-                showToast('✅ Dados importados!');
-            };
-            input.click();
-        }
-        
-        async function resetWeek() {
-            if (confirm('Resetar semana?')) {
-                currentData.week  = [false,false,false,false,false,false,false];
-                currentData.stats = { books: 0, workouts: 0, prayer: 0, focus: 0 };
-                currentData.tasks = dailyTasks.map(function(t) { return Object.assign({}, t, { completed: false }); });
-                currentData.mit   = { text: '', done: false, date: '' };
-                await saveData();
-                init();
-                showToast('✅ Semana resetada!');
-            }
-        }
-        
-        async function resetAll() {
-            if (confirm('⚠️ APAGAR TUDO. Tem certeza?')) {
-                try { await window.storage.delete('diego-data-v4', false); } catch(e) {}
-                currentData = null;
-                await init();
-                showToast('✅ Tudo resetado!');
-            }
-        }
-
-        // ── UTILS ────────────────────────────────────────
-        function showToast(msg) {
-            var t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            setTimeout(function() { t.classList.remove('show'); }, 3000);
-        }
-        
-        function updateDate() {
-            document.getElementById('headerDate').textContent =
-                new Date().toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long' });
-        }
-        
-        function showDailyQuote() {
-            var q = quotes[Math.floor(Math.random() * quotes.length)];
-            document.getElementById('dailyQuote').innerHTML =
-                '<div class="quote">"' + q.text + '"</div><div class="author">— ' + q.author + '</div>';
-        }
-
-        // ── INIT ─────────────────────────────────────────
-        async function init() {
-            updateDate();
-            currentData = await loadData();
-            if (!currentData.mit)        currentData.mit = { text: '', done: false, date: '' };
-            if (!currentData.temaChecks) currentData.temaChecks = {};
-
-            showDailyQuote();
-            renderTemaBanner();
-            renderMIT();
-            renderTasks();
-            renderWeek();
-            renderStats();
-
-            var pd = currentData.pdca || {};
-            var el;
-            el = document.getElementById('pdcaPlan');  if (el) el.value = pd.plan  || '';
-            el = document.getElementById('pdcaDo');    if (el) el.value = pd.do    || '';
-            el = document.getElementById('pdcaCheck'); if (el) el.value = pd.check || '';
-            el = document.getElementById('pdcaAct');   if (el) el.value = pd.act   || '';
-
-            var rf = currentData.reflection || {};
-            el = document.getElementById('reflectServe');     if (el) el.value = rf.serve     || '';
-            el = document.getElementById('reflectHumble');    if (el) el.value = rf.humble    || '';
-            el = document.getElementById('reflectGratitude'); if (el) el.value = rf.gratitude || '';
-            el = document.getElementById('reflectPurpose');   if (el) el.value = rf.purpose   || '';
-
-            var st = currentData.stoic || {};
-            el = document.getElementById('stoicControl'); if (el) el.value = st.control || '';
-            el = document.getElementById('stoicAccept');  if (el) el.value = st.accept  || '';
-            el = document.getElementById('stoicVirtue');  if (el) el.value = st.virtue  || '';
-        }
-
-        // Navegação — registrada após carregamento completo
-        window.onload = function() {
-            var navHome       = document.getElementById('nav-home');
-            var navAgenda     = document.getElementById('nav-agenda');
-            var navGoals      = document.getElementById('nav-goals');
-            var navReflection = document.getElementById('nav-reflection');
-            var navConfig     = document.getElementById('nav-config');
-
-            navHome.onclick       = function() { switchTab('home'); };
-            navAgenda.onclick     = function() { switchTab('agenda'); };
-            navGoals.onclick      = function() { switchTab('goals'); };
-            navReflection.onclick = function() { switchTab('reflection'); };
-            navConfig.onclick     = function() { switchTab('config'); };
-
-            init();
+    // ── PDCA ─────────────────────────────────────────────
+    async function savePDCA() {
+        currentData.pdca = {
+            plan: document.getElementById('pdcaPlan').value,
+            do:   document.getElementById('pdcaDo').value,
+            check:document.getElementById('pdcaCheck').value,
+            act:  document.getElementById('pdcaAct').value
         };
+        await saveData(); showToast('✅ PDCA salvo!');
+    }
 
-        setInterval(updateDate, 60000);
-    </script>
+    // ── RESUMO ───────────────────────────────────────────
+    async function saveResume() {
+        currentData.resume = {
+            decisions: document.getElementById('reflectDecisions').value,
+            avoided:   document.getElementById('reflectAvoided').value,
+            learn:     document.getElementById('reflectLearn').value
+        };
+        await saveData(); showToast('✅ Resumo salvo!');
+    }
+
+    // ── REFLEXÃO ─────────────────────────────────────────
+    async function saveReflection() {
+        currentData.reflection = {
+            serve:     document.getElementById('reflectServe').value,
+            gratitude: document.getElementById('reflectGratitude').value,
+            purpose:   document.getElementById('reflectPurpose').value
+        };
+        await saveData(); showToast('✅ Reflexão salva!');
+    }
+
+    async function saveStoic() {
+        currentData.stoic = {
+            control: document.getElementById('stoicControl').value,
+            accept:  document.getElementById('stoicAccept').value
+        };
+        await saveData(); showToast('✅ Salvo!');
+    }
+
+    // ── EXPORT / IMPORT ──────────────────────────────────
+    function exportData() {
+        var blob = new Blob([JSON.stringify(currentData,null,2)], {type:'application/json'});
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'bastiao-backup-' + new Date().toISOString().split('T')[0] + '.json';
+        a.click();
+        showToast('✅ Dados exportados!');
+    }
+
+    function importData() {
+        var inp = document.createElement('input');
+        inp.type = 'file'; inp.accept = '.json';
+        inp.onchange = async function(e) {
+            var text = await e.target.files[0].text();
+            currentData = JSON.parse(text);
+            await saveData(); init();
+            showToast('✅ Dados importados!');
+        };
+        inp.click();
+    }
+
+    async function resetWeek() {
+        if (confirm('Resetar semana?')) {
+            currentData.week = [false,false,false,false,false,false,false];
+            currentData.stats = { books: currentData.stats.books, workouts: 0, bolsa: 0, focus: 0 };
+            currentData.tasks = dailyTasks.map(function(t) { return Object.assign({}, t, {completed:false}); });
+            currentData.mit = { text:'', done:false, date:'' };
+            currentData.bolsaSemana = [false,false,false,false,false];
+            await saveData(); init();
+            showToast('✅ Semana resetada!');
+        }
+    }
+
+    async function resetAll() {
+        if (confirm('⚠️ APAGAR TUDO. Tem certeza?')) {
+            try { await window.storage.delete('bastiao-v5', false); } catch(e) {}
+            currentData = null; await init();
+            showToast('✅ Tudo resetado!');
+        }
+    }
+
+    // ── UTILS ────────────────────────────────────────────
+    function showToast(msg) {
+        var t = document.getElementById('toast');
+        t.textContent = msg; t.classList.add('show');
+        setTimeout(function() { t.classList.remove('show'); }, 3000);
+    }
+
+    function updateDate() {
+        document.getElementById('headerDate').textContent =
+            new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'});
+    }
+
+    function showQuote() {
+        var q = quotes[Math.floor(Math.random() * quotes.length)];
+        document.getElementById('dailyQuote').innerHTML =
+            '<div class="quote-text">"' + q.text + '"</div><div class="quote-author">— ' + q.author + '</div>';
+    }
+
+    // ── INIT ─────────────────────────────────────────────
+    async function init() {
+        updateDate();
+        currentData = await loadData();
+        if (!currentData.mit) currentData.mit = {text:'',done:false,date:''};
+        if (!currentData.temaChecks) currentData.temaChecks = {};
+        if (!currentData.bolsaSemana) currentData.bolsaSemana = [false,false,false,false,false];
+        if (!currentData.bolsaNotas) currentData.bolsaNotas = [];
+        if (!currentData.resume) currentData.resume = {decisions:'',avoided:'',learn:''};
+
+        showQuote();
+        renderBabyBanner();
+        renderTemaBanner();
+        renderMIT();
+        renderTasks();
+        renderWeek();
+        renderStats();
+
+        var pd = currentData.pdca || {};
+        var el;
+        el = document.getElementById('pdcaPlan');  if (el) el.value = pd.plan  || '';
+        el = document.getElementById('pdcaDo');    if (el) el.value = pd.do    || '';
+        el = document.getElementById('pdcaCheck'); if (el) el.value = pd.check || '';
+        el = document.getElementById('pdcaAct');   if (el) el.value = pd.act   || '';
+
+        var rs = currentData.resume || {};
+        el = document.getElementById('reflectDecisions'); if (el) el.value = rs.decisions || '';
+        el = document.getElementById('reflectAvoided');   if (el) el.value = rs.avoided   || '';
+        el = document.getElementById('reflectLearn');     if (el) el.value = rs.learn     || '';
+
+        var rf = currentData.reflection || {};
+        el = document.getElementById('reflectServe');     if (el) el.value = rf.serve     || '';
+        el = document.getElementById('reflectGratitude'); if (el) el.value = rf.gratitude || '';
+        el = document.getElementById('reflectPurpose');   if (el) el.value = rf.purpose   || '';
+
+        var st = currentData.stoic || {};
+        el = document.getElementById('stoicControl'); if (el) el.value = st.control || '';
+        el = document.getElementById('stoicAccept');  if (el) el.value = st.accept  || '';
+    }
+
+    // Navegação robusta
+    window.onload = function() {
+        document.getElementById('nav-home').onclick       = function() { switchTab('home'); };
+        document.getElementById('nav-agenda').onclick     = function() { switchTab('agenda'); };
+        document.getElementById('nav-goals').onclick      = function() { switchTab('goals'); };
+        document.getElementById('nav-reflection').onclick = function() { switchTab('reflection'); };
+        document.getElementById('nav-config').onclick     = function() { switchTab('config'); };
+        init();
+    };
+
+    setInterval(updateDate, 60000);
+    setInterval(renderBolsa, 300000); // Atualiza badge bolsa a cada 5min
+</script>
 </body>
 </html>
