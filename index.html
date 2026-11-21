@@ -2179,7 +2179,8 @@ function renderRotinaEditor() {
 /* ════════════════════════════════════════
    GOOGLE CALENDAR
 ════════════════════════════════════════ */
-var GCAL_CLIENT_ID = ''; // Preencher após criar no Google Cloud Console
+var GCAL_CLIENT_ID = '758451223086-4l384sijtiuknj771gk8ovbh3m07ro1t.apps.googleusercontent.com';
+var GEMINI_API_KEY = 'AQ.Ab8RN6LkoYcA17ohmQyDH6uBOW24_SIixJXoOVA0SC0Phw9CPQ';
 
 function connectGCal() {
   if (!GCAL_CLIENT_ID) {
@@ -2367,9 +2368,10 @@ function processCapture() {
   if (!text) return;
 
   var g = getGlobals();
+  var apiKey = g.gemini_key || GEMINI_API_KEY;
 
-  if (g.gemini_key) {
-    processWithGemini(text, g.gemini_key);
+  if (apiKey) {
+    processWithGemini(text, apiKey);
   } else {
     // NLP local
     captureResult = nlpParse(text);
