@@ -64,13 +64,16 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-html, body { height: 100%; overflow: hidden; background: var(--navy-deep); }
-
+html { height: 100%; overflow: hidden; background: var(--navy-deep); }
 body {
+  height: 100%;
+  overflow: hidden;
   font-family: 'Inter', system-ui, sans-serif;
   font-size: 15px;
   color: var(--text);
   background: var(--surface2);
+  /* Evita zoom no iOS ao focar inputs */
+  -webkit-text-size-adjust: 100%;
 }
 
 /* ══════════════════════════════════════════
@@ -243,18 +246,29 @@ body {
   flex: 1;
   overflow: hidden;
   position: relative;
+  min-height: 0; /* crucial no iOS para flex + overflow funcionar */
 }
 .page {
   position: absolute;
   inset: 0;
+  /* iOS scroll fix: usar bloco em vez de flex no container de scroll */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  padding: 12px 14px;
+  overscroll-behavior-y: contain;
   display: none;
+}
+.page.active { display: block; }
+
+/* Wrapper interno que cria o gap e padding */
+.page-inner {
+  display: flex;
   flex-direction: column;
   gap: 10px;
+  padding: 12px 14px;
+  /* Padding extra no fundo para o último card não ficar atrás do FAB */
+  padding-bottom: calc(14px + 68px);
+  min-height: 100%;
 }
-.page.active { display: flex; }
 
 /* ══════════════════════════════════════════
    CARDS & COMPONENTS
@@ -322,7 +336,7 @@ body {
   padding: 8px 10px;
   color: #fff;
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 15px;
+  font-size: 16px; /* ≥16px evita zoom iOS */
   font-weight: 600;
   margin-top: 6px;
   outline: none;
@@ -531,7 +545,7 @@ body {
   border-radius: 8px;
   padding: 8px 10px;
   font-family: 'Inter', sans-serif;
-  font-size: 13px;
+  font-size: 16px; /* ≥16px evita zoom iOS */
   color: var(--text);
   resize: vertical;
   outline: none;
@@ -550,7 +564,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 10px;
-  font-size: 13px;
+  font-size: 16px; /* ≥16px evita zoom iOS */
   color: var(--text);
   outline: none;
 }
@@ -719,7 +733,7 @@ body {
   border: 1.5px solid var(--border);
   border-radius: 10px;
   padding: 10px 12px;
-  font-size: 14px;
+  font-size: 16px; /* ≥16px evita zoom iOS */
   color: var(--text);
   outline: none;
   font-family: 'Inter', sans-serif;
@@ -922,7 +936,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 7px 9px;
-  font-size: 12px;
+  font-size: 16px; /* ≥16px evita zoom iOS */
   color: var(--text);
   resize: none;
   outline: none;
@@ -939,7 +953,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 10px;
-  font-size: 13px;
+  font-size: 16px; /* ≥16px evita zoom iOS */
   color: var(--text);
   outline: none;
   font-family: 'Inter', sans-serif;
@@ -1018,7 +1032,7 @@ body {
   border: 1px solid var(--border);
   border-radius: 8px;
   padding: 8px 10px;
-  font-size: 13px;
+  font-size: 16px; /* ≥16px evita zoom iOS */
   color: var(--text);
   outline: none;
 }
@@ -1130,6 +1144,7 @@ body {
 
     <!-- ── Hoje ── -->
     <div class="page active" id="page-hoje">
+    <div class="page-inner">
 
       <!-- MIT -->
       <div class="mit-card" id="mitCard">
@@ -1176,10 +1191,12 @@ body {
         </div>
       </div>
 
+    </div><!-- /page-inner -->
     </div><!-- /page-hoje -->
 
     <!-- ── Foco ── -->
     <div class="page" id="page-foco">
+    <div class="page-inner">
 
       <!-- Timer -->
       <div class="card">
@@ -1190,9 +1207,9 @@ body {
           <div class="timer-time" id="timerDisplay">25:00</div>
           <div class="timer-label" id="timerLabel">Pronto para focar</div>
           <div class="timer-presets">
-            <button class="preset-btn active" onclick="setPreset(25,'Pomodoro')">25m</button>
-            <button class="preset-btn" onclick="setPreset(50,'Deep Work')">50m</button>
-            <button class="preset-btn" onclick="setPreset(5,'Pausa')">5m</button>
+            <button class="preset-btn active" onclick="setPreset(25,'Pomodoro',this)">25m</button>
+            <button class="preset-btn" onclick="setPreset(50,'Deep Work',this)">50m</button>
+            <button class="preset-btn" onclick="setPreset(5,'Pausa',this)">5m</button>
           </div>
           <div class="timer-controls">
             <button class="timer-btn timer-btn-reset" onclick="resetTimer()">↺ Reiniciar</button>
@@ -1252,10 +1269,12 @@ body {
         <div id="kaizenList"><!-- JS --></div>
       </div>
 
+    </div><!-- /page-inner -->
     </div><!-- /page-foco -->
 
     <!-- ── Metas ── -->
     <div class="page" id="page-metas">
+    <div class="page-inner">
 
       <!-- Leitura -->
       <div class="card">
@@ -1311,10 +1330,12 @@ body {
         </div>
       </div>
 
+    </div><!-- /page-inner -->
     </div><!-- /page-metas -->
 
     <!-- ── Reflexão ── -->
     <div class="page" id="page-reflexao">
+    <div class="page-inner">
 
       <div class="card">
         <div class="card-hd">
@@ -1367,10 +1388,12 @@ body {
         </div>
       </div>
 
+    </div><!-- /page-inner -->
     </div><!-- /page-reflexao -->
 
     <!-- ── Config ── -->
     <div class="page" id="page-config">
+    <div class="page-inner">
 
       <!-- Setup / integrações -->
       <div class="card">
@@ -1468,10 +1491,12 @@ body {
         </div>
       </div>
 
+    </div><!-- /page-inner -->
     </div><!-- /page-config -->
 
     <!-- ── Biblioteca ── -->
     <div class="page" id="page-biblioteca">
+    <div class="page-inner">
 
       <!-- Header ação -->
       <div class="card">
@@ -1528,6 +1553,7 @@ body {
         </div>
       </div>
 
+    </div><!-- /page-inner -->
     </div><!-- /page-biblioteca -->
 
   </div><!-- /pages -->
@@ -2673,7 +2699,6 @@ function askNextField() {
     // Gera chips para os próximos 7 dias
     var days = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
     var now = new Date();
-    var d = new Date(now); d.setDate(d.getDate()+1);
     chips.push('Hoje');
     chips.push('Amanhã');
     for (var i = 2; i <= 5; i++) {
@@ -2783,20 +2808,6 @@ function formatDateLabel(dateStr) {
   return days[d.getDay()] + ' ' + d.getDate() + ' ' + months[d.getMonth()];
 }
 
-function showCaptureResult(r) {
-  var el = document.getElementById('captureResult');
-  var typeEl = document.getElementById('resultType');
-  var previewEl = document.getElementById('resultPreview');
-  typeEl.textContent = r.type === 'event' ? '📅 Compromisso detectado' : '✅ Tarefa detectada';
-  typeEl.className = 'result-type ' + (r.type === 'event' ? 'type-event' : 'type-task');
-  var preview = r.title;
-  if (r.date) preview += '\n📅 ' + r.date;
-  if (r.time) preview += ' às ' + r.time;
-  if (r.location) preview += '\n📍 ' + r.location;
-  if (r.ctx) preview += '\n🏷️ #' + r.ctx;
-  previewEl.textContent = preview;
-  el.classList.add('show');
-}
 
 function confirmCapture() {
   if (!captureResult) return;
@@ -2807,9 +2818,17 @@ function confirmCapture() {
     params.set('text', captureResult.title);
     if (captureResult.date && captureResult.time) {
       var dtStart = captureResult.date.replace(/-/g,'') + 'T' + captureResult.time.replace(':','') + '00';
-      var dtEnd = captureResult.date.replace(/-/g,'') + 'T' + (function(){
+      var dtEnd = (function(){
         var t = captureResult.time.split(':');
-        var h = parseInt(t[0])+1; return pad(h) + t[1] + '00';
+        var h = parseInt(t[0]) + 1;
+        if (h >= 24) {
+          // Passa para o dia seguinte
+          var parts = captureResult.date.split('-');
+          var nextDay = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2])+1);
+          var nd = nextDay.getFullYear() + '' + pad(nextDay.getMonth()+1) + '' + pad(nextDay.getDate());
+          return nd + 'T' + pad(h - 24) + t[1] + '00';
+        }
+        return captureResult.date.replace(/-/g,'') + 'T' + pad(h) + t[1] + '00';
       }());
       params.set('dates', dtStart + '/' + dtEnd);
     } else if (captureResult.date) {
@@ -2907,7 +2926,7 @@ var timerTotalSec = 25 * 60;
 var timerRemainSec = 25 * 60;
 var timerLabel_str = 'Pomodoro';
 
-function setPreset(min, label) {
+function setPreset(min, label, el) {
   if (timerRunning) return;
   timerTotalSec = min * 60;
   timerRemainSec = timerTotalSec;
@@ -2916,7 +2935,7 @@ function setPreset(min, label) {
   document.querySelectorAll('.preset-btn').forEach(function(b) {
     b.classList.remove('active');
   });
-  event.target.classList.add('active');
+  if (el) el.classList.add('active');
 }
 
 function toggleTimer() {
@@ -3163,7 +3182,17 @@ function editBook(id) {
 
 function renderBiblioteca() {
   var books = getBooks();
+  var g = getGlobals();
   var meta = 52;
+  // Usa meta de livros dos goals se existir
+  if (g.goals) {
+    for (var gi = 0; gi < g.goals.length; gi++) {
+      if (g.goals[gi].id === 'livros' && g.goals[gi].meta) {
+        meta = g.goals[gi].meta;
+        break;
+      }
+    }
+  }
   var pct = Math.min(100, Math.round((books.length / meta) * 100));
   document.getElementById('booksProgressBar').style.width = pct + '%';
   document.getElementById('booksProgressLabel').textContent = books.length + '/' + meta;
@@ -3233,7 +3262,8 @@ function toggleTheme() {
   var current = root.getAttribute('data-theme') || 'light';
   var next = current === 'dark' ? 'light' : 'dark';
   root.setAttribute('data-theme', next);
-  document.querySelector('.icon-btn[onclick="toggleTheme()"]').textContent = next === 'dark' ? '☀️' : '🌙';
+  var themeBtn = document.querySelector('.icon-btn[onclick="toggleTheme()"]');
+  if (themeBtn) themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
   var g = getGlobals();
   g.theme = next;
   saveGlobals(g);
@@ -3243,7 +3273,8 @@ function applyTheme() {
   var g = getGlobals();
   if (g.theme && g.theme !== 'system') {
     document.documentElement.setAttribute('data-theme', g.theme);
-    document.querySelector('.icon-btn[onclick="toggleTheme()"]').textContent = g.theme === 'dark' ? '☀️' : '🌙';
+    var themeBtn = document.querySelector('.icon-btn[onclick="toggleTheme()"]');
+    if (themeBtn) themeBtn.textContent = g.theme === 'dark' ? '☀️' : '🌙';
   }
 }
 
