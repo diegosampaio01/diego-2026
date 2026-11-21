@@ -747,6 +747,27 @@ body {
 }
 @keyframes pulse { 0%,100%{box-shadow:0 0 0 4px rgba(239,68,68,0.2)} 50%{box-shadow:0 0 0 8px rgba(239,68,68,0.1)} }
 
+/* Chat messages */
+#chatMessages {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0 14px 10px;
+  max-height: 240px;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+#chatMessages.active { display: flex; }
+
+/* Quick chips */
+#quickChips {
+  display: none;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 14px 10px;
+}
+#quickChips.active { display: flex; }
+
 .capture-send {
   display: block;
   width: calc(100% - 28px);
@@ -762,6 +783,7 @@ body {
   letter-spacing: 0.3px;
 }
 .capture-send:active { opacity: 0.85; }
+.capture-send:disabled { opacity: 0.6; cursor: default; }
 
 /* AI result */
 .capture-result {
@@ -1537,12 +1559,20 @@ body {
   <div class="capture-sheet" id="captureSheet">
     <div class="sheet-handle"></div>
     <div class="sheet-title">⚡ Captura Rápida</div>
+
+    <!-- Chat conversacional -->
+    <div id="chatMessages"></div>
+
     <div class="capture-input-row">
       <input class="capture-input" id="captureInput"
-        placeholder="Fale ou escreva: 'Reunião amanhã 14h com João' ou 'Ligar para fornecedor #Mercado'…">
+        placeholder="Ex: 'Reunião semana que vem para cafeteria' ou 'Ligar fornecedor #Mercado'…">
       <button class="mic-btn" id="micBtn" onclick="toggleMic()">🎤</button>
     </div>
-    <button class="capture-send" onclick="processCapture()">✦ Processar com IA</button>
+    <button class="capture-send" id="captureSendBtn" onclick="processCapture()">✦ Processar</button>
+
+    <!-- Chips de resposta rápida -->
+    <div id="quickChips"></div>
+
     <div class="capture-result" id="captureResult">
       <div class="result-type" id="resultType"></div>
       <div class="result-preview" id="resultPreview"></div>
@@ -2380,21 +2410,43 @@ function injectGCalEvents(events) {
 }
 
 /* ════════════════════════════════════════
-   GEMINI / CAPTURA RÁPIDA
+   GEMINI / CAPTURA RÁPIDA — Modo Conversacional
 ════════════════════════════════════════ */
 var captureResult = null;
+var captureConv = {
+  active: false,
+  data: {},          // { type, title, date, time, location, ctx }
+  pendingFields: [], // campos ainda a perguntar
+  history: []        // { role:'user'|'bot', text }
+};
 
 function openCapture() {
   document.getElementById('captureOverlay').classList.add('open');
   document.getElementById('captureSheet').classList.add('open');
+  resetConversation();
   document.getElementById('captureInput').focus();
-  document.getElementById('captureResult').classList.remove('show');
 }
 
 function closeCapture() {
   document.getElementById('captureOverlay').classList.remove('open');
   document.getElementById('captureSheet').classList.remove('open');
   stopMic();
+  resetConversation();
+}
+
+function resetConversation() {
+  captureConv = { active: false, data: {}, pendingFields: [], history: [] };
+  captureResult = null;
+  document.getElementById('captureInput').value = '';
+  document.getElementById('captureInput').disabled = false;
+  document.getElementById('captureResult').classList.remove('show');
+  var cm = document.getElementById('chatMessages');
+  cm.classList.remove('active'); cm.innerHTML = '';
+  var qc = document.getElementById('quickChips');
+  qc.classList.remove('active'); qc.innerHTML = '';
+  document.getElementById('captureInput').placeholder = 'Ex: Reunião semana que vem para cafeteria…';
+  document.getElementById('captureSendBtn').textContent = '✦ Processar';
+  document.getElementById('captureSendBtn').style.display = '';
 }
 
 function openAIConfig() {
@@ -2414,18 +2466,13 @@ function saveGeminiKey() {
   toast('Chave Gemini salva ✓');
 }
 
-// NLP local fallback (sem API)
+// ── NLP local fallback ──
 function nlpParse(text) {
   var t = text.toLowerCase();
   var result = { type: 'task', title: text, date: null, time: null, location: null, ctx: null };
-
-  // Detecta compromisso por palavras de tempo
   var hasTime = /\d{1,2}h|\d{1,2}:\d{2}|amanhã|hoje|depois de amanhã|segunda|terça|quarta|quinta|sexta|sábado|domingo/.test(t);
-  var hasAction = /reunião|meeting|call|ligação|consulta|médico|dentista|aula|entrega|prazo|evento|compromisso/.test(t);
-
+  var hasAction = /reunião|meeting|call|ligação|consulta|médico|dentista|aula|entrega|prazo|evento|compromisso|cafeteria|café/.test(t);
   if (hasTime || hasAction) result.type = 'event';
-
-  // Data relativa
   var now = new Date();
   if (t.indexOf('amanhã') !== -1) {
     var tom = new Date(now); tom.setDate(tom.getDate()+1);
@@ -2436,56 +2483,153 @@ function nlpParse(text) {
   } else if (t.indexOf('hoje') !== -1) {
     result.date = now.toISOString().split('T')[0];
   }
-
-  // Horário
   var timeMatch = text.match(/(\d{1,2})[h:](\d{2})?/);
-  if (timeMatch) {
-    result.time = pad(parseInt(timeMatch[1])) + ':' + (timeMatch[2] || '00');
-  } else if (t.indexOf('manhã') !== -1) result.time = '09:00';
+  if (timeMatch) result.time = pad(parseInt(timeMatch[1])) + ':' + (timeMatch[2] || '00');
+  else if (t.indexOf('manhã') !== -1) result.time = '09:00';
   else if (t.indexOf('almoço') !== -1) result.time = '12:00';
   else if (t.indexOf('tarde') !== -1) result.time = '14:00';
   else if (t.indexOf('noite') !== -1) result.time = '19:00';
-
-  // Localização
   var locMatch = text.match(/\b(?:no|na|em)\s+([A-ZÁÉÍÓÚÂÃÇ][^,#\n]+)/);
   if (locMatch) result.location = locMatch[1].trim();
-
-  // Contexto
   var ctxMatch = text.match(/#(Mercado|Levels|Família|Familia|Pessoal|Pós|Pos)/i);
   if (ctxMatch) result.ctx = ctxMatch[1];
-
   return result;
 }
 
+// ── Renderiza mensagem no chat ──
+function addChatMsg(role, text) {
+  var box = document.getElementById('chatMessages');
+  box.classList.add('active');
+  var div = document.createElement('div');
+  div.style.cssText = role === 'bot'
+    ? 'align-self:flex-start;background:var(--surface2,rgba(255,255,255,0.08));padding:10px 14px;border-radius:14px 14px 14px 4px;font-size:14px;max-width:88%;color:var(--fg);line-height:1.4'
+    : 'align-self:flex-end;background:var(--accent);padding:10px 14px;border-radius:14px 14px 4px 14px;font-size:14px;max-width:88%;color:#fff;line-height:1.4';
+  div.textContent = text;
+  box.appendChild(div);
+  box.scrollTop = box.scrollHeight;
+  captureConv.history.push({ role: role, text: text });
+}
+
+// ── Exibe chips de resposta rápida ──
+function showChips(chips) {
+  var box = document.getElementById('quickChips');
+  box.innerHTML = '';
+  box.classList.add('active');
+  chips.forEach(function(label) {
+    var btn = document.createElement('button');
+    btn.textContent = label;
+    btn.style.cssText = 'padding:6px 12px;border-radius:20px;border:1px solid var(--accent);background:transparent;color:var(--accent);font-size:13px;cursor:pointer';
+    btn.onclick = function() {
+      document.getElementById('captureInput').value = label;
+      processCapture();
+    };
+    box.appendChild(btn);
+  });
+}
+
+function hideChips() {
+  var box = document.getElementById('quickChips');
+  box.classList.remove('active');
+  box.innerHTML = '';
+}
+
+// ── Ponto de entrada do botão Processar ──
 function processCapture() {
   var text = document.getElementById('captureInput').value.trim();
   if (!text) return;
 
-  var g = getGlobals();
-  var apiKey = g.gemini_key || GEMINI_API_KEY;
+  hideChips();
 
-  if (apiKey) {
-    processWithGemini(text, apiKey);
+  if (!captureConv.active) {
+    // Primeira mensagem — iniciar conversa
+    addChatMsg('user', text);
+    document.getElementById('captureInput').value = '';
+    var g = getGlobals();
+    var apiKey = g.gemini_key || GEMINI_API_KEY;
+    if (apiKey) {
+      startConversationWithGemini(text, apiKey);
+    } else {
+      var parsed = nlpParse(text);
+      startConversationLocal(parsed);
+    }
   } else {
-    // NLP local
-    captureResult = nlpParse(text);
-    showCaptureResult(captureResult);
+    // Resposta dentro da conversa
+    addChatMsg('user', text);
+    document.getElementById('captureInput').value = '';
+    var g2 = getGlobals();
+    var apiKey2 = g2.gemini_key || GEMINI_API_KEY;
+    if (apiKey2) {
+      continueConversationWithGemini(text, apiKey2);
+    } else {
+      continueConversationLocal(text);
+    }
   }
 }
 
-function processWithGemini(text, apiKey) {
-  var btn = document.querySelector('.capture-send');
-  btn.textContent = '⏳ Processando…';
+// ── Chama Gemini para extrair dados iniciais ──
+function startConversationWithGemini(text, apiKey) {
+  var btn = document.getElementById('captureSendBtn');
+  btn.textContent = '⏳ Analisando…';
   btn.disabled = true;
 
-  var prompt = 'Você é um assistente pessoal de produtividade do Diego, empresário brasileiro. ' +
-    'Classifique a entrada como "event" (tem data/hora marcada) ou "task" (ação sem hora). ' +
-    'Responda APENAS com JSON válido neste formato: ' +
-    '{"type":"event|task","title":"título limpo","date":"YYYY-MM-DD ou null","time":"HH:MM ou null","location":"local ou null","ctx":"Mercado|Levels|Família|Pessoal|Pós ou null"}. ' +
-    'Data de hoje: ' + new Date().toLocaleDateString('pt-BR') + '. ' +
-    'Entrada: "' + text + '"';
+  var today = new Date();
+  var todayStr = today.toLocaleDateString('pt-BR');
+  var dayNames = ['domingo','segunda','terça','quarta','quinta','sexta','sábado'];
+  var todayDay = dayNames[today.getDay()];
 
-  // AQ. keys usam header x-goog-api-key; AIza keys usam ?key= na URL
+  var prompt = 'Você é o assistente do Diego, empresário brasileiro (tem minimercado e empresa de suplementos Levels Nutrition). ' +
+    'Hoje é ' + todayStr + ' (' + todayDay + '). ' +
+    'Analise esta entrada e extraia o máximo de informações possíveis. ' +
+    'Responda APENAS com JSON neste formato exato: ' +
+    '{"type":"event|task","title":"título limpo em português","date":"YYYY-MM-DD ou null","time":"HH:MM ou null","location":"local ou null","ctx":"Mercado|Levels|Família|Pessoal|Pós ou null","missing":["date","time","location"] (lista de campos OBRIGATÓRIOS que faltam para um evento)}. ' +
+    'Para "missing": se type=task, retorne []. Se type=event, liste apenas campos críticos ausentes (date e/ou time são obrigatórios; location só inclua se parecer relevante pelo contexto). ' +
+    'Entrada do Diego: "' + text + '"';
+
+  geminiCall(prompt, apiKey, function(data) {
+    btn.textContent = '✦ Enviar';
+    btn.disabled = false;
+    if (data) {
+      captureConv.active = true;
+      captureConv.data = data;
+      captureConv.pendingFields = data.missing || [];
+      askNextField();
+    } else {
+      var parsed = nlpParse(text);
+      startConversationLocal(parsed);
+    }
+  });
+}
+
+// ── Chama Gemini para interpretar resposta do usuário ──
+function continueConversationWithGemini(userAnswer, apiKey) {
+  var btn = document.getElementById('captureSendBtn');
+  btn.textContent = '⏳…';
+  btn.disabled = true;
+
+  var currentField = captureConv.pendingFields[0];
+  var today = new Date().toLocaleDateString('pt-BR');
+
+  var prompt = 'Contexto: evento "' + captureConv.data.title + '". ' +
+    'Hoje é ' + today + '. ' +
+    'O usuário respondeu à pergunta sobre "' + currentField + '": "' + userAnswer + '". ' +
+    'Extraia o valor para o campo "' + currentField + '". ' +
+    'Se for "date", retorne formato YYYY-MM-DD. Se for "time", retorne HH:MM. Se for "location", retorne o nome do local. ' +
+    'Responda APENAS com JSON: {"value":"valor extraído ou null","skip":true|false}. ' +
+    '"skip":true se o usuário indicar que não sabe ou não quer informar.';
+
+  geminiCall(prompt, apiKey, function(data) {
+    btn.textContent = '✦ Enviar';
+    btn.disabled = false;
+    if (data && !data.skip && data.value) {
+      captureConv.data[currentField] = data.value;
+    }
+    captureConv.pendingFields.shift();
+    askNextField();
+  });
+}
+
+// ── Faz a chamada à API Gemini ──
+function geminiCall(prompt, apiKey, callback) {
   var isAQ = apiKey.indexOf('AQ.') === 0;
   var url = isAQ
     ? 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
@@ -2499,46 +2643,157 @@ function processWithGemini(text, apiKey) {
     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
   })
   .then(function(r) { return r.json(); })
-  .then(function(data) {
-    btn.textContent = '✦ Processar com IA';
-    btn.disabled = false;
-    var raw = data.candidates && data.candidates[0] && data.candidates[0].content.parts[0].text;
+  .then(function(resp) {
+    var raw = resp.candidates && resp.candidates[0] && resp.candidates[0].content.parts[0].text;
     if (raw) {
       try {
-        var jsonMatch = raw.match(/\{[\s\S]*\}/);
-        if (jsonMatch) {
-          captureResult = JSON.parse(jsonMatch[0]);
-          showCaptureResult(captureResult);
-          return;
-        }
+        var m = raw.match(/\{[\s\S]*\}/);
+        if (m) { callback(JSON.parse(m[0])); return; }
       } catch(e) {}
     }
-    // Fallback para NLP local
-    captureResult = nlpParse(text);
-    showCaptureResult(captureResult);
+    callback(null);
   })
-  .catch(function() {
-    btn.textContent = '✦ Processar com IA';
-    btn.disabled = false;
-    captureResult = nlpParse(text);
-    showCaptureResult(captureResult);
-  });
+  .catch(function() { callback(null); });
+}
+
+// ── Pergunta o próximo campo ──
+function askNextField() {
+  if (captureConv.pendingFields.length === 0) {
+    // Tudo completo — mostrar resumo
+    showConversationSummary();
+    return;
+  }
+
+  var field = captureConv.pendingFields[0];
+  var question = '';
+  var chips = [];
+
+  if (field === 'date') {
+    question = '📅 Qual é a data? (Ex: amanhã, segunda, 25/11)';
+    // Gera chips para os próximos 7 dias
+    var days = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+    var now = new Date();
+    var d = new Date(now); d.setDate(d.getDate()+1);
+    chips.push('Hoje');
+    chips.push('Amanhã');
+    for (var i = 2; i <= 5; i++) {
+      var nd = new Date(now); nd.setDate(now.getDate()+i);
+      chips.push(days[nd.getDay()] + ' ' + nd.getDate() + '/' + pad(nd.getMonth()+1));
+    }
+  } else if (field === 'time') {
+    question = '⏰ Que horas? (Ex: 14h, 9:30)';
+    chips = ['08:00','09:00','10:00','11:00','14:00','15:00','16:00','19:00'];
+  } else if (field === 'location') {
+    question = '📍 Onde vai ser? (Ex: Mercado, online, escritório)';
+    chips = ['Online / Remoto','Mercado Liderança','Levels Nutrition','Sem local definido'];
+  }
+
+  addChatMsg('bot', question);
+  showChips(chips);
+  document.getElementById('captureInput').placeholder = 'Digite ou escolha acima…';
+}
+
+// ── Fluxo local sem API ──
+function startConversationLocal(parsed) {
+  captureConv.active = true;
+  captureConv.data = parsed;
+  captureConv.pendingFields = [];
+  if (parsed.type === 'event') {
+    if (!parsed.date) captureConv.pendingFields.push('date');
+    if (!parsed.time) captureConv.pendingFields.push('time');
+  }
+  askNextField();
+}
+
+function continueConversationLocal(answer) {
+  var field = captureConv.pendingFields[0];
+  var t = answer.toLowerCase();
+
+  if (field === 'date') {
+    var now = new Date();
+    var days = { 'segunda':1,'terça':2,'quarta':3,'quinta':4,'sexta':5,'sábado':6,'domingo':0 };
+    if (t === 'hoje' || t.indexOf('hoje') !== -1) {
+      captureConv.data.date = now.toISOString().split('T')[0];
+    } else if (t === 'amanhã' || t.indexOf('amanhã') !== -1) {
+      var tom = new Date(now); tom.setDate(now.getDate()+1);
+      captureConv.data.date = tom.toISOString().split('T')[0];
+    } else {
+      for (var d in days) {
+        if (t.indexOf(d) !== -1) {
+          var diff = (days[d] - now.getDay() + 7) % 7 || 7;
+          var target = new Date(now); target.setDate(now.getDate()+diff);
+          captureConv.data.date = target.toISOString().split('T')[0];
+          break;
+        }
+      }
+      // Tenta DD/MM
+      var dm = answer.match(/(\d{1,2})\/(\d{1,2})/);
+      if (dm) {
+        var year = now.getFullYear();
+        captureConv.data.date = year + '-' + pad(parseInt(dm[2])) + '-' + pad(parseInt(dm[1]));
+      }
+    }
+  } else if (field === 'time') {
+    var tm = answer.match(/(\d{1,2})[h:](\d{2})?/);
+    if (tm) captureConv.data.time = pad(parseInt(tm[1])) + ':' + (tm[2] || '00');
+  } else if (field === 'location') {
+    if (t.indexOf('sem local') === -1 && t !== 'não' && t !== 'nao') {
+      captureConv.data.location = answer;
+    }
+  }
+
+  captureConv.pendingFields.shift();
+  askNextField();
+}
+
+// ── Exibe resumo final para confirmação ──
+function showConversationSummary() {
+  var d = captureConv.data;
+  var lines = ['✅ Pronto! Aqui está o resumo:'];
+  lines.push('📌 ' + d.title);
+  if (d.date) {
+    var dateLabel = formatDateLabel(d.date);
+    lines.push('📅 ' + dateLabel + (d.time ? ' às ' + d.time : ''));
+  }
+  if (d.location) lines.push('📍 ' + d.location);
+  if (d.ctx) lines.push('🏷️ #' + d.ctx);
+
+  addChatMsg('bot', lines.join('\n'));
+
+  captureResult = d;
+
+  // Mostra botões de confirmar/cancelar
+  var el = document.getElementById('captureResult');
+  document.getElementById('resultType').textContent = d.type === 'event' ? '📅 Compromisso' : '✅ Tarefa';
+  document.getElementById('resultType').className = 'result-type ' + (d.type === 'event' ? 'type-event' : 'type-task');
+  document.getElementById('resultPreview').textContent = '';
+  el.classList.add('show');
+
+  document.getElementById('captureInput').placeholder = '';
+  document.getElementById('captureInput').disabled = true;
+  document.getElementById('captureSendBtn').style.display = 'none';
+}
+
+function formatDateLabel(dateStr) {
+  if (!dateStr) return '';
+  var parts = dateStr.split('-');
+  var d = new Date(parseInt(parts[0]), parseInt(parts[1])-1, parseInt(parts[2]));
+  var days = ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb'];
+  var months = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+  return days[d.getDay()] + ' ' + d.getDate() + ' ' + months[d.getMonth()];
 }
 
 function showCaptureResult(r) {
   var el = document.getElementById('captureResult');
   var typeEl = document.getElementById('resultType');
   var previewEl = document.getElementById('resultPreview');
-
   typeEl.textContent = r.type === 'event' ? '📅 Compromisso detectado' : '✅ Tarefa detectada';
   typeEl.className = 'result-type ' + (r.type === 'event' ? 'type-event' : 'type-task');
-
   var preview = r.title;
   if (r.date) preview += '\n📅 ' + r.date;
   if (r.time) preview += ' às ' + r.time;
   if (r.location) preview += '\n📍 ' + r.location;
   if (r.ctx) preview += '\n🏷️ #' + r.ctx;
-
   previewEl.textContent = preview;
   el.classList.add('show');
 }
@@ -2547,21 +2802,24 @@ function confirmCapture() {
   if (!captureResult) return;
 
   if (captureResult.type === 'event') {
-    // Monta URL Google Calendar
     var params = new URLSearchParams();
     params.set('action', 'TEMPLATE');
     params.set('text', captureResult.title);
     if (captureResult.date && captureResult.time) {
       var dtStart = captureResult.date.replace(/-/g,'') + 'T' + captureResult.time.replace(':','') + '00';
-      params.set('dates', dtStart + '/' + dtStart);
+      var dtEnd = captureResult.date.replace(/-/g,'') + 'T' + (function(){
+        var t = captureResult.time.split(':');
+        var h = parseInt(t[0])+1; return pad(h) + t[1] + '00';
+      }());
+      params.set('dates', dtStart + '/' + dtEnd);
+    } else if (captureResult.date) {
+      params.set('dates', captureResult.date.replace(/-/g,'') + '/' + captureResult.date.replace(/-/g,''));
     }
     if (captureResult.location) params.set('location', captureResult.location);
     params.set('add', 'popup:60');
-
     window.open('https://calendar.google.com/calendar/r/eventedit?' + params.toString(), '_blank');
     toast('📅 Abrindo Google Calendar…');
   } else {
-    // Adiciona como tarefa
     var day = getDayData();
     if (!day.tasks) day.tasks = [];
     day.tasks.push({
@@ -2575,13 +2833,16 @@ function confirmCapture() {
     toast('✅ Tarefa adicionada!');
   }
 
-  document.getElementById('captureInput').value = '';
-  captureResult = null;
+  resetConversation();
   closeCapture();
 }
 
 function cancelCapture() {
+  // Reinicia a conversa
   document.getElementById('captureResult').classList.remove('show');
+  document.getElementById('captureInput').disabled = false;
+  document.getElementById('captureSendBtn').style.display = '';
+  resetConversation();
   document.getElementById('captureInput').focus();
 }
 
