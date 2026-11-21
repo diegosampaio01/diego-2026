@@ -2485,9 +2485,17 @@ function processWithGemini(text, apiKey) {
     'Data de hoje: ' + new Date().toLocaleDateString('pt-BR') + '. ' +
     'Entrada: "' + text + '"';
 
-  fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey, {
+  // AQ. keys usam header x-goog-api-key; AIza keys usam ?key= na URL
+  var isAQ = apiKey.indexOf('AQ.') === 0;
+  var url = isAQ
+    ? 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent'
+    : 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
+  var headers = { 'Content-Type': 'application/json' };
+  if (isAQ) headers['x-goog-api-key'] = apiKey;
+
+  fetch(url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: headers,
     body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
   })
   .then(function(r) { return r.json(); })
